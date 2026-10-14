@@ -1,0 +1,28 @@
+[
+  {
+    "sha": "4f1c2a9be0d7a0c3f5e8b1d2c4a6e8f0a1b3c5d7",
+    "commit": {
+      "author": {"name": "Octo Developer", "email": "octo-dev@users.noreply.github.com", "date": "2026-09-30T08:11:50Z"},
+      "committer": {"name": "Octo Developer", "email": "octo-dev@users.noreply.github.com", "date": "2026-09-30T08:11:50Z"},
+      "message": "Add snapshot hashing",
+      "comment_count": 0
+    },
+    "author": {"login": "octo-dev", "id": 90210417, "type": "User"},
+    "committer": {"login": "octo-dev", "id": 90210417, "type": "User"},
+    "html_url": "https://github.com/octo-dev/evidence-kit/commit/4f1c2a9be0d7a0c3f5e8b1d2c4a6e8f0a1b3c5d7",
+    "parents": [{"sha": "9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b"}]
+  },
+  {
+    "sha": "9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b",
+    "commit": {
+      "author": {"name": "Octo Developer", "email": "octo-dev@users.noreply.github.com", "date": "2023-05-02T11:04:12Z"},
+      "committer": {"name": "Octo Developer", "email": "octo-dev@users.noreply.github.com", "date": "2023-05-02T11:04:12Z"},
+      "message": "Initial commit",
+      "comment_count": 0
+    },
+    "author": {"login": "octo-dev", "id": 90210417, "type": "User"},
+    "committer": {"login": "octo-dev", "id": 90210417, "type": "User"},
+    "html_url": "https://github.com/octo-dev/evidence-kit/commit/9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b",
+    "parents": []
+  }
+]
