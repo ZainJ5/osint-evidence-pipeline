@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.env
+*.egg-info/
+
+ui/.next/
+ui/node_modules/
+ui/out/
+backdate_m2.log
+.backdate/
