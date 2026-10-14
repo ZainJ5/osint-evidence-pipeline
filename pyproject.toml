@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osint-evidence-pipeline"
+version = "0.2.0"
+description = "Concurrent collection, immutable snapshotting, identity resolution and explainable evidence scoring of public developer profiles"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi==0.162.5",
+    "uvicorn==0.54.0",
+    "httpx==0.28.1",
+    "psycopg[binary]==3.3.9",
+    "minio==7.2.20",
+    "python-multipart==0.0.32",
+    "pypdf==7.1.1",
+    "python-docx==1.2.0",
+    "anthropic==2.10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.4.2",
+    "pytest-asyncio==1.5.0",
+    "pytest-cov==7.1.0",
+    "ruff==0.17.5",
+    "pylint==4.1.4",
+]
+
+[tool.setuptools.packages.find]
+include = ["pipeline*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "integration: needs PostgreSQL and MinIO (docker compose up)",
+    "stress: concurrency stress tests",
+]
+
+[tool.coverage.run]
+source = ["pipeline/core"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "C90", "UP", "SIM"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.pylint.main]
+py-version = "3.10"
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint."messages control"]
+disable = ["missing-function-docstring", "too-few-public-methods", "too-many-arguments", "too-many-positional-arguments", "too-many-instance-attributes"]
