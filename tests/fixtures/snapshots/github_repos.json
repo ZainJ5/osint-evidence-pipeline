@@ -1,0 +1,5 @@
+[
+  {"name": "hello-api", "full_name": "octo-dev/hello-api", "fork": false, "archived": false, "description": "A small REST API", "language": "Python", "stargazers_count": 12, "html_url": "https://github.com/octo-dev/hello-api", "created_at": "2021-03-01T09:00:00Z", "pushed_at": "2024-05-10T18:30:00Z", "topics": ["fastapi", "rest-api"]},
+  {"name": "forked-lib", "full_name": "octo-dev/forked-lib", "fork": true, "archived": false, "description": "Someone else's library", "language": "Go", "stargazers_count": 0, "html_url": "https://github.com/octo-dev/forked-lib", "created_at": "2022-01-01T00:00:00Z", "pushed_at": "2022-01-02T00:00:00Z", "topics": []},
+  {"name": "algo-notes", "full_name": "octo-dev/algo-notes", "fork": false, "archived": true, "description": null, "language": "C++", "stargazers_count": 3, "html_url": "https://github.com/octo-dev/algo-notes", "created_at": "2020-06-15T12:00:00Z", "pushed_at": "2023-11-20T08:00:00Z", "topics": []}
+]
