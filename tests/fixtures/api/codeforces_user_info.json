@@ -1,0 +1,23 @@
+{
+  "status": "OK",
+  "result": [
+    {
+      "handle": "octo-dev",
+      "firstName": "Octo",
+      "lastName": "Developer",
+      "country": "Pakistan",
+      "city": "Lahore",
+      "organization": "Example University",
+      "contribution": 0,
+      "rank": "specialist",
+      "rating": 1534,
+      "maxRank": "expert",
+      "maxRating": 1612,
+      "lastOnlineTimeSeconds": 1792000000,
+      "registrationTimeSeconds": 1560000000,
+      "friendOfCount": 12,
+      "avatar": "https://userpic.codeforces.org/no-avatar.jpg",
+      "titlePhoto": "https://userpic.codeforces.org/no-title.jpg"
+    }
+  ]
+}

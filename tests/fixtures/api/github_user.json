@@ -1,0 +1,23 @@
+{
+  "login": "octo-dev",
+  "id": 90210417,
+  "node_id": "MDQ6VXNlcjkwMjEwNDE3",
+  "avatar_url": "https://avatars.githubusercontent.com/u/90210417?v=4",
+  "html_url": "https://github.com/octo-dev",
+  "type": "User",
+  "site_admin": false,
+  "name": "Octo Developer",
+  "company": "@example-labs",
+  "blog": "https://octo-dev.example.org",
+  "location": "Lahore, Pakistan",
+  "email": null,
+  "hireable": true,
+  "bio": "Backend developer. Python, Rust and competitive programming.",
+  "twitter_username": null,
+  "public_repos": 3,
+  "public_gists": 0,
+  "followers": 42,
+  "following": 7,
+  "created_at": "2019-03-14T09:21:44Z",
+  "updated_at": "2026-10-02T17:05:12Z"
+}
