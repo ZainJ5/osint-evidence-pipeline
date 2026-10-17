@@ -1,0 +1,94 @@
+# Recorded 2026-11-19 03:07 PST on Windows 11, Python 3.10.0, coverage.py 7.16.2
+$ .venv/Scripts/python -m pytest tests/whitebox -v --cov=pipeline/core --cov-branch --cov-report=term-missing
+============================= test session starts =============================
+platform win32 -- Python 3.10.0, pytest-8.4.2, pluggy-1.7.0 -- C:\Users\DELL\osint-evidence-pipeline\.venv\Scripts\python.exe
+rootdir: C:\Users\DELL\osint-evidence-pipeline
+configfile: pyproject.toml
+plugins: anyio-4.16.0, platformdirs-4.12.4, asyncio-1.5.0, cov-7.1.0
+asyncio: mode=auto, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 34 items
+
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_01_first_attempt_succeeds PASSED [  2%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_02_retryable_status_with_no_retries_left_raises_it PASSED [  5%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_03_non_transient_transport_error_is_reraised_at_once PASSED [  8%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_04_transient_error_with_no_retries_left_raises_it PASSED [ 11%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_05_retry_after_503_backs_off_then_succeeds PASSED [ 14%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_06_compound_retry_condition[429-True] PASSED [ 17%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_06_compound_retry_condition[499-False] PASSED [ 20%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_06_compound_retry_condition[500-True] PASSED [ 23%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_06_compound_retry_condition[599-True] PASSED [ 26%]
+tests/whitebox/test_basis_paths_collection.py::test_wb_col_07_loop_runs_its_maximum_number_of_times PASSED [ 29%]
+tests/whitebox/test_basis_paths_identity.py::test_wb_idn_01_no_accounts_gives_an_empty_profile PASSED [ 32%]
+tests/whitebox/test_basis_paths_identity.py::test_wb_idn_02_single_account_below_threshold_has_no_anchor_to_hop_through PASSED [ 35%]
+tests/whitebox/test_basis_paths_identity.py::test_wb_idn_03_single_anchored_account_does_not_hop_through_itself PASSED [ 38%]
+tests/whitebox/test_basis_paths_identity.py::test_wb_idn_04_second_account_links_by_one_hop_through_the_anchored_one PASSED [ 41%]
+tests/whitebox/test_basis_paths_identity.py::test_wb_idn_05_linked_with_reasons_keeps_rationale_unchanged PASSED [ 44%]
+tests/whitebox/test_basis_paths_identity.py::test_wb_idn_06_no_signal_but_zero_threshold_is_linked_with_placeholder_reason PASSED [ 47%]
+tests/whitebox/test_basis_paths_identity.py::test_wb_idn_07_reasons_below_threshold_get_the_not_linked_note PASSED [ 50%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_01_no_matching_skill_node_is_unsupported PASSED [ 52%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_02_skill_without_claimed_duration_is_supported PASSED [ 55%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_03_years_claimed_but_no_usable_dates_is_partial PASSED [ 58%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_04_observed_years_equal_to_claim_is_supported PASSED [ 61%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_05_conditional_expression_in_node_8[2.5-2020-01-01-2022-12-01-supported] PASSED [ 64%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_05_conditional_expression_in_node_8[2-2020-01-02-2022-01-01-partially_supported] PASSED [ 67%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_06_unknown_component_is_rejected PASSED [ 70%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_07_negative_weight_is_rejected PASSED [ 73%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_08_all_zero_weights_are_rejected PASSED [ 76%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_09_valid_weights_are_merged_over_the_defaults PASSED [ 79%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_10_compound_weight_predicate[True-False] PASSED [ 82%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_10_compound_weight_predicate[0.3-False] PASSED [ 85%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_10_compound_weight_predicate[None-False] PASSED [ 88%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_10_compound_weight_predicate[0-True] PASSED [ 91%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_10_compound_weight_predicate[0.0-True] PASSED [ 94%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_11_non_finite_weight_is_rejected[nan] PASSED [ 97%]
+tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_11_non_finite_weight_is_rejected[inf] PASSED [100%]
+
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.10.0-final-0 _______________
+
+Name                                       Stmts   Miss Branch BrPart  Cover   Missing
+--------------------------------------------------------------------------------------
+pipeline\core\__init__.py                      0      0      0      0   100%
+pipeline\core\collection\__init__.py           6      0      0      0   100%
+pipeline\core\collection\codeforces.py        27     16      6      0    33%   19-31, 35-41
+pipeline\core\collection\collector.py         63      7     14      2    88%   31, 34, 65, 70, 75-76, 84
+pipeline\core\collection\factory.py           30      8      4      1    68%   24, 29, 33, 37-38, 49-51
+pipeline\core\collection\github.py            33     21      8      0    29%   17-30, 33-35, 40-41, 46-57
+pipeline\core\collection\leetcode.py          19      8      4      0    48%   30-37
+pipeline\core\collection\rate_limiter.py      41      9      8      3    76%   14, 16, 27, 31, 38-40, 52-53
+pipeline\core\collection\runner.py            31     19      8      0    31%   24-28, 31-33, 36-46, 49
+pipeline\core\errors.py                       22      0      2      0   100%
+pipeline\core\identity\__init__.py             0      0      0      0   100%
+pipeline\core\identity\profiles.py            36     25     10      0    24%   10, 19-21, 25-29, 33-38, 46-55
+pipeline\core\identity\resolver.py            44      2     18      2    94%   27, 29
+pipeline\core\identity\signals.py             58      3     18      4    91%   55, 59, 73->72, 103
+pipeline\core\inputs.py                       63     21     24      3    52%   29-41, 54-59, 85-86, 92, 94
+pipeline\core\log.py                          33     33      8      0     0%   3-51
+pipeline\core\matching\__init__.py             0      0      0      0   100%
+pipeline\core\matching\matcher.py             68     68     28      0     0%   3-83
+pipeline\core\matching\normalizer.py          14      1      6      1    90%   53
+pipeline\core\matching\vector_index.py        20     20      4      0     0%   3-33
+pipeline\core\models.py                      135      4      2      1    96%   65, 140, 154, 168
+pipeline\core\pipeline.py                    142    142     18      0     0%   3-212
+pipeline\core\ports.py                        21      0      0      0   100%
+pipeline\core\scoring\__init__.py              0      0      0      0   100%
+pipeline\core\scoring\claims.py               37     37     14      0     0%   3-86
+pipeline\core\scoring\rules.py                70     17     20      0    70%   91-108
+pipeline\core\scoring\scoring.py              56     10     14      2    77%   42-43, 55-60, 105, 108
+pipeline\core\scoring\verifier.py             14     14      4      0     0%   3-21
+pipeline\core\snapshot\__init__.py             0      0      0      0   100%
+pipeline\core\snapshot\extractor.py           45     45     12      0     0%   3-62
+pipeline\core\snapshot\parsers.py            121    121     42      0     0%   3-215
+pipeline\core\snapshot\store.py               33     33      6      0     0%   3-63
+--------------------------------------------------------------------------------------
+TOTAL                                       1282    684    302     19    43%
+============================= 34 passed in 1.64s ==============================
+
+# Per-function line+branch coverage of the analysed functions (tests/whitebox only)
+# from the 'functions' section of: .venv/Scripts/python -m coverage json (same run)
+function                                                   stmts miss branches br_cov br_part  cover
+pipeline/core/collection/collector.py::Collector._fetch       17    0        8      8       0   100%
+pipeline/core/identity/resolver.py::IdentityResolver.resolve    12    0        6      6       0   100%
+pipeline/core/identity/resolver.py::IdentityResolver._link     6    0        4      4       0   100%
+pipeline/core/scoring/rules.py::SkillClaimRule.verify         16    0        6      6       0   100%
+pipeline/core/scoring/scoring.py::_validated                   9    0        6      6       0   100%
