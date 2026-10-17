@@ -1,0 +1,312 @@
+........................................................................ [ 42%]
+x..........xxxx..x...................................................... [ 84%]
+..........................                                               [100%]
+============================== warnings summary ===============================
+.venv\lib\site-packages\fastapi\testclient.py:1
+  C:\Users\DELL\osint-evidence-pipeline\.venv\lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================================== PASSES ====================================
+___________________ test_fifty_required_skills_is_accepted ____________________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "b5350729-ce0c-4e31-bb38-0781166192f1", "candidate_id": "cfb0c3b7-9855-40a4-8ac8-1b68645876f1", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "b5350729-ce0c-4e31-bb38-0781166192f1", "candidate_id": "cfb0c3b7-9855-40a4-8ac8-1b68645876f1", "stage": "collect", "fetches": 10, "failures": []}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "b5350729-ce0c-4e31-bb38-0781166192f1", "candidate_id": "cfb0c3b7-9855-40a4-8ac8-1b68645876f1", "stage": "extract", "nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "b5350729-ce0c-4e31-bb38-0781166192f1", "candidate_id": "cfb0c3b7-9855-40a4-8ac8-1b68645876f1", "stage": "resolve", "linked": ["codeforces:octo-dev", "github:octo-dev", "leetcode:octo-dev"], "kept_nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "b5350729-ce0c-4e31-bb38-0781166192f1", "candidate_id": "cfb0c3b7-9855-40a4-8ac8-1b68645876f1", "stage": "score", "coverage": 0.04, "claims": 2, "total": 47.14}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "b5350729-ce0c-4e31-bb38-0781166192f1", "status": "done", "total": 47.14}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+______________________ test_delete_twice_is_204_then_404 ______________________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "c7f59c61-dc92-43a1-909b-bc7fbeb31f28", "candidate_id": "37a46259-e7d4-41f9-8afe-b657e30e2a8c", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "c7f59c61-dc92-43a1-909b-bc7fbeb31f28", "candidate_id": "37a46259-e7d4-41f9-8afe-b657e30e2a8c", "stage": "collect", "fetches": 10, "failures": []}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "c7f59c61-dc92-43a1-909b-bc7fbeb31f28", "candidate_id": "37a46259-e7d4-41f9-8afe-b657e30e2a8c", "stage": "extract", "nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "c7f59c61-dc92-43a1-909b-bc7fbeb31f28", "candidate_id": "37a46259-e7d4-41f9-8afe-b657e30e2a8c", "stage": "resolve", "linked": ["codeforces:octo-dev", "github:octo-dev", "leetcode:octo-dev"], "kept_nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "c7f59c61-dc92-43a1-909b-bc7fbeb31f28", "candidate_id": "37a46259-e7d4-41f9-8afe-b657e30e2a8c", "stage": "score", "coverage": 1.0, "claims": 2, "total": 75.94}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "c7f59c61-dc92-43a1-909b-bc7fbeb31f28", "status": "done", "total": 75.94}
+{"level": "INFO", "logger": "pipeline.run", "event": "candidate_deleted", "candidate_id": "37a46259-e7d4-41f9-8afe-b657e30e2a8c"}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+INFO     pipeline.run:log.py:42 candidate_deleted
+__________ test_each_failure_class_gives_a_partial_run[BB-NFR02-01] ___________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "528b8026-d58a-458a-b40c-80e5725993ad", "candidate_id": "69e836a1-2511-4ab0-a323-1cb3ddb0b3f5", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "528b8026-d58a-458a-b40c-80e5725993ad", "candidate_id": "69e836a1-2511-4ab0-a323-1cb3ddb0b3f5", "stage": "collect", "fetches": 4, "failures": [["github", "TIMEOUT"]]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "528b8026-d58a-458a-b40c-80e5725993ad", "candidate_id": "69e836a1-2511-4ab0-a323-1cb3ddb0b3f5", "stage": "extract", "nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "528b8026-d58a-458a-b40c-80e5725993ad", "candidate_id": "69e836a1-2511-4ab0-a323-1cb3ddb0b3f5", "stage": "resolve", "linked": ["codeforces:octo-dev", "leetcode:octo-dev"], "kept_nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "528b8026-d58a-458a-b40c-80e5725993ad", "candidate_id": "69e836a1-2511-4ab0-a323-1cb3ddb0b3f5", "stage": "score", "coverage": 0.3333333333333333, "claims": 4, "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "528b8026-d58a-458a-b40c-80e5725993ad", "status": "partial", "total": 33.67}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+__________ test_each_failure_class_gives_a_partial_run[BB-NFR02-02] ___________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "dd76fbba-0246-4551-a97a-c16cfd131639", "candidate_id": "97977e70-92c7-4b2d-b9cc-23faf7f621e5", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "dd76fbba-0246-4551-a97a-c16cfd131639", "candidate_id": "97977e70-92c7-4b2d-b9cc-23faf7f621e5", "stage": "collect", "fetches": 4, "failures": [["github", "HTTP_500"]]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "dd76fbba-0246-4551-a97a-c16cfd131639", "candidate_id": "97977e70-92c7-4b2d-b9cc-23faf7f621e5", "stage": "extract", "nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "dd76fbba-0246-4551-a97a-c16cfd131639", "candidate_id": "97977e70-92c7-4b2d-b9cc-23faf7f621e5", "stage": "resolve", "linked": ["codeforces:octo-dev", "leetcode:octo-dev"], "kept_nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "dd76fbba-0246-4551-a97a-c16cfd131639", "candidate_id": "97977e70-92c7-4b2d-b9cc-23faf7f621e5", "stage": "score", "coverage": 0.3333333333333333, "claims": 4, "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "dd76fbba-0246-4551-a97a-c16cfd131639", "status": "partial", "total": 33.67}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+__________ test_each_failure_class_gives_a_partial_run[BB-NFR02-03] ___________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "306cfb1e-86d3-42c9-8bbf-b46e089681e6", "candidate_id": "84bd6696-d208-44e4-b386-f55078dda24d", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "306cfb1e-86d3-42c9-8bbf-b46e089681e6", "candidate_id": "84bd6696-d208-44e4-b386-f55078dda24d", "stage": "collect", "fetches": 4, "failures": [["github", "MALFORMED_BODY"]]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "306cfb1e-86d3-42c9-8bbf-b46e089681e6", "candidate_id": "84bd6696-d208-44e4-b386-f55078dda24d", "stage": "extract", "nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "306cfb1e-86d3-42c9-8bbf-b46e089681e6", "candidate_id": "84bd6696-d208-44e4-b386-f55078dda24d", "stage": "resolve", "linked": ["codeforces:octo-dev", "leetcode:octo-dev"], "kept_nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "306cfb1e-86d3-42c9-8bbf-b46e089681e6", "candidate_id": "84bd6696-d208-44e4-b386-f55078dda24d", "stage": "score", "coverage": 0.3333333333333333, "claims": 4, "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "306cfb1e-86d3-42c9-8bbf-b46e089681e6", "status": "partial", "total": 33.67}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+__________ test_each_failure_class_gives_a_partial_run[BB-NFR02-04] ___________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "62f8051e-a29b-45c3-833e-fd14aeb19ea3", "candidate_id": "9857c28d-6716-4341-88d3-2bb50504e142", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "62f8051e-a29b-45c3-833e-fd14aeb19ea3", "candidate_id": "9857c28d-6716-4341-88d3-2bb50504e142", "stage": "collect", "fetches": 4, "failures": [["github", "NOT_FOUND"]]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "62f8051e-a29b-45c3-833e-fd14aeb19ea3", "candidate_id": "9857c28d-6716-4341-88d3-2bb50504e142", "stage": "extract", "nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "62f8051e-a29b-45c3-833e-fd14aeb19ea3", "candidate_id": "9857c28d-6716-4341-88d3-2bb50504e142", "stage": "resolve", "linked": ["codeforces:octo-dev", "leetcode:octo-dev"], "kept_nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "62f8051e-a29b-45c3-833e-fd14aeb19ea3", "candidate_id": "9857c28d-6716-4341-88d3-2bb50504e142", "stage": "score", "coverage": 0.3333333333333333, "claims": 4, "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "62f8051e-a29b-45c3-833e-fd14aeb19ea3", "status": "partial", "total": 33.67}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+_______________ test_all_sources_failing_still_finishes_partial _______________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "3356105c-621a-4eb8-a8bb-ca10b4dc700d", "candidate_id": "43d24f3d-810f-4e47-b8ba-15831b23a639", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "3356105c-621a-4eb8-a8bb-ca10b4dc700d", "candidate_id": "43d24f3d-810f-4e47-b8ba-15831b23a639", "stage": "collect", "fetches": 0, "failures": [["github", "NOT_FOUND"], ["codeforces", "NOT_FOUND"], ["leetcode", "NOT_FOUND"]]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "3356105c-621a-4eb8-a8bb-ca10b4dc700d", "candidate_id": "43d24f3d-810f-4e47-b8ba-15831b23a639", "stage": "extract", "nodes": 0}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "3356105c-621a-4eb8-a8bb-ca10b4dc700d", "candidate_id": "43d24f3d-810f-4e47-b8ba-15831b23a639", "stage": "resolve", "linked": [], "kept_nodes": 0}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "3356105c-621a-4eb8-a8bb-ca10b4dc700d", "candidate_id": "43d24f3d-810f-4e47-b8ba-15831b23a639", "stage": "score", "coverage": 0.0, "claims": 4, "total": 0.0}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "3356105c-621a-4eb8-a8bb-ca10b4dc700d", "status": "partial", "total": 0.0}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+_________________ test_replay_of_a_partial_run_reproduces_it __________________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "stage": "collect", "fetches": 4, "failures": [["github", "NOT_FOUND"]]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "stage": "extract", "nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "stage": "resolve", "linked": ["codeforces:octo-dev", "leetcode:octo-dev"], "kept_nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "stage": "score", "coverage": 0.3333333333333333, "claims": 4, "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "status": "partial", "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "stage": "extract", "nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "stage": "resolve", "linked": ["codeforces:octo-dev", "leetcode:octo-dev"], "kept_nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "candidate_id": "898b7153-a6fd-4bd4-b6f8-03579cc4d1e1", "stage": "score", "coverage": 0.3333333333333333, "claims": 4, "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_replayed", "run_id": "8950619c-d96a-450a-ae89-91587e113eab", "evidence_identical": true, "score_identical": true}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_replayed
+=========================== short test summary info ===========================
+PASSED tests/blackbox/test_bb_api.py::test_domain_invalid_body_is_422_validation_error[BB-FR15-01]
+PASSED tests/blackbox/test_bb_api.py::test_domain_invalid_body_is_422_validation_error[BB-FR15-02]
+PASSED tests/blackbox/test_bb_api.py::test_domain_invalid_body_is_422_validation_error[BB-FR15-03]
+PASSED tests/blackbox/test_bb_api.py::test_domain_invalid_body_is_422_validation_error[BB-FR15-04]
+PASSED tests/blackbox/test_bb_api.py::test_domain_invalid_body_is_422_validation_error[BB-FR15-05]
+PASSED tests/blackbox/test_bb_api.py::test_domain_invalid_body_is_422_validation_error[BB-FR15-06]
+PASSED tests/blackbox/test_bb_api.py::test_domain_invalid_body_is_422_validation_error[BB-FR15-07]
+PASSED tests/blackbox/test_bb_api.py::test_fifty_required_skills_is_accepted
+PASSED tests/blackbox/test_bb_api.py::test_body_missing_a_field_is_422
+PASSED tests/blackbox/test_bb_api.py::test_report_of_unknown_run_is_404
+PASSED tests/blackbox/test_bb_api.py::test_replay_of_unknown_run_is_404_run_not_found
+PASSED tests/blackbox/test_bb_api.py::test_delete_of_unknown_candidate_is_404_candidate_not_found
+PASSED tests/blackbox/test_bb_api.py::test_delete_twice_is_204_then_404
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-25]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-26]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-27]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-28]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-29]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-30]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-31]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-32]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-33]
+PASSED tests/blackbox/test_bb_candidate.py::test_handle_rules_per_source[BB-FR01-34]
+PASSED tests/blackbox/test_bb_candidate.py::test_resume_length_1_accepted
+PASSED tests/blackbox/test_bb_candidate.py::test_zero_handles_accepted
+PASSED tests/blackbox/test_bb_collection.py::test_attempts_and_backoff_follow_max_retries[BB-FR05-11]
+PASSED tests/blackbox/test_bb_collection.py::test_attempts_and_backoff_follow_max_retries[BB-FR05-12]
+PASSED tests/blackbox/test_bb_collection.py::test_429_and_5xx_are_retried_until_exhausted[BB-FR05-13]
+PASSED tests/blackbox/test_bb_collection.py::test_429_and_5xx_are_retried_until_exhausted[BB-FR05-14]
+PASSED tests/blackbox/test_bb_collection.py::test_429_and_5xx_are_retried_until_exhausted[BB-FR05-15]
+PASSED tests/blackbox/test_bb_collection.py::test_429_and_5xx_are_retried_until_exhausted[BB-FR05-16]
+PASSED tests/blackbox/test_bb_collection.py::test_429_and_5xx_are_retried_until_exhausted[BB-FR05-17]
+PASSED tests/blackbox/test_bb_collection.py::test_other_status_codes_fail_without_retry[BB-FR05-18]
+PASSED tests/blackbox/test_bb_collection.py::test_other_status_codes_fail_without_retry[BB-FR05-19]
+PASSED tests/blackbox/test_bb_collection.py::test_other_status_codes_fail_without_retry[BB-FR05-20]
+PASSED tests/blackbox/test_bb_collection.py::test_other_status_codes_fail_without_retry[BB-FR05-21]
+PASSED tests/blackbox/test_bb_collection.py::test_other_status_codes_fail_without_retry[BB-FR05-22]
+PASSED tests/blackbox/test_bb_collection.py::test_other_status_codes_fail_without_retry[BB-FR05-23]
+PASSED tests/blackbox/test_bb_collection.py::test_other_status_codes_fail_without_retry[BB-FR05-24]
+PASSED tests/blackbox/test_bb_collection.py::test_2xx_edges_are_accepted[BB-FR05-25]
+PASSED tests/blackbox/test_bb_collection.py::test_2xx_edges_are_accepted[BB-FR05-26]
+PASSED tests/blackbox/test_bb_collection.py::test_success_on_the_last_allowed_attempt
+PASSED tests/blackbox/test_bb_collection.py::test_success_one_attempt_too_late_is_a_failure
+PASSED tests/blackbox/test_bb_collection.py::test_timeout_recovers_on_the_last_allowed_attempt
+PASSED tests/blackbox/test_bb_collection.py::test_limiter_interval_respects_source_floor[BB-FR05-30]
+PASSED tests/blackbox/test_bb_collection.py::test_limiter_interval_respects_source_floor[BB-FR05-31]
+PASSED tests/blackbox/test_bb_collection.py::test_limiter_interval_respects_source_floor[BB-FR05-32]
+PASSED tests/blackbox/test_bb_collection.py::test_limiter_interval_respects_source_floor[BB-FR05-33]
+PASSED tests/blackbox/test_bb_collection.py::test_limiter_concurrency_comes_from_config
+PASSED tests/blackbox/test_bb_identity.py::test_extreme_thresholds[BB-FR09-02]
+PASSED tests/blackbox/test_bb_identity.py::test_extreme_thresholds[BB-FR09-03]
+PASSED tests/blackbox/test_bb_identity.py::test_extreme_thresholds[BB-FR09-04]
+PASSED tests/blackbox/test_bb_identity.py::test_extreme_thresholds[BB-FR09-05]
+PASSED tests/blackbox/test_bb_identity.py::test_default_threshold_is_0_50[BB-FR09-06]
+PASSED tests/blackbox/test_bb_identity.py::test_default_threshold_is_0_50[BB-FR09-07]
+PASSED tests/blackbox/test_bb_identity.py::test_unlinked_rationale_names_the_threshold
+PASSED tests/blackbox/test_bb_identity.py::test_threshold_just_outside_range_is_refused[BB-FR09-09]
+PASSED tests/blackbox/test_bb_identity.py::test_threshold_just_outside_range_is_refused[BB-FR09-10]
+PASSED tests/blackbox/test_bb_inputs.py::test_required_skills_count_boundaries[BB-FR10-01]
+PASSED tests/blackbox/test_bb_inputs.py::test_required_skills_count_boundaries[BB-FR10-02]
+PASSED tests/blackbox/test_bb_inputs.py::test_required_skills_count_boundaries[BB-FR10-03]
+PASSED tests/blackbox/test_bb_inputs.py::test_required_skills_count_boundaries[BB-FR10-04]
+PASSED tests/blackbox/test_bb_inputs.py::test_required_skills_count_boundaries[BB-FR10-05]
+PASSED tests/blackbox/test_bb_inputs.py::test_required_skills_count_boundaries[BB-FR10-06]
+PASSED tests/blackbox/test_bb_inputs.py::test_blank_skill_entry_rejected[BB-FR10-07]
+PASSED tests/blackbox/test_bb_inputs.py::test_blank_skill_entry_rejected[BB-FR10-08]
+PASSED tests/blackbox/test_bb_inputs.py::test_blank_skill_entry_rejected[BB-FR10-09]
+PASSED tests/blackbox/test_bb_inputs.py::test_blank_skill_entry_rejected[BB-FR10-10]
+PASSED tests/blackbox/test_bb_inputs.py::test_blank_skill_entry_rejected[BB-FR10-11]
+PASSED tests/blackbox/test_bb_inputs.py::test_padded_skill_entry_accepted
+PASSED tests/blackbox/test_bb_inputs.py::test_missing_job_id_or_title_rejected[BB-FR10-13]
+PASSED tests/blackbox/test_bb_inputs.py::test_missing_job_id_or_title_rejected[BB-FR10-14]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR05-01]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR05-02]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR05-03]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR05-04]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR05-05]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR07-01]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR07-02]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR05-06]
+PASSED tests/blackbox/test_bb_inputs.py::test_run_config_field_boundaries[BB-FR05-07]
+PASSED tests/blackbox/test_bb_inputs.py::test_link_threshold_nan_rejected
+PASSED tests/blackbox/test_bb_inputs.py::test_max_repos_valid_values_accepted[BB-NFR03-01]
+PASSED tests/blackbox/test_bb_inputs.py::test_max_repos_valid_values_accepted[BB-NFR03-02]
+PASSED tests/blackbox/test_bb_matching.py::test_duplicates_that_normalise_equal_count_once[BB-FR10-16]
+PASSED tests/blackbox/test_bb_matching.py::test_duplicates_that_normalise_equal_count_once[BB-FR10-17]
+PASSED tests/blackbox/test_bb_matching.py::test_duplicates_that_normalise_equal_count_once[BB-FR10-18]
+PASSED tests/blackbox/test_bb_matching.py::test_duplicates_that_normalise_equal_count_once[BB-FR10-19]
+PASSED tests/blackbox/test_bb_matching.py::test_coverage_with_fifty_required_skills[BB-FR10-20]
+PASSED tests/blackbox/test_bb_matching.py::test_coverage_with_fifty_required_skills[BB-FR10-21]
+PASSED tests/blackbox/test_bb_matching.py::test_coverage_with_fifty_required_skills[BB-FR10-22]
+PASSED tests/blackbox/test_bb_matching.py::test_no_evidence_gives_zero_coverage
+PASSED tests/blackbox/test_bb_reliability.py::test_each_failure_class_gives_a_partial_run[BB-NFR02-01]
+PASSED tests/blackbox/test_bb_reliability.py::test_each_failure_class_gives_a_partial_run[BB-NFR02-02]
+PASSED tests/blackbox/test_bb_reliability.py::test_each_failure_class_gives_a_partial_run[BB-NFR02-03]
+PASSED tests/blackbox/test_bb_reliability.py::test_each_failure_class_gives_a_partial_run[BB-NFR02-04]
+PASSED tests/blackbox/test_bb_reliability.py::test_all_sources_failing_still_finishes_partial
+PASSED tests/blackbox/test_bb_replay.py::test_replay_of_a_run_that_is_not_finished_is_refused[BB-FR14-01]
+PASSED tests/blackbox/test_bb_replay.py::test_replay_of_a_run_that_is_not_finished_is_refused[BB-FR14-02]
+PASSED tests/blackbox/test_bb_replay.py::test_replay_of_empty_run_id_is_refused
+PASSED tests/blackbox/test_bb_replay.py::test_replay_of_a_partial_run_reproduces_it
+PASSED tests/blackbox/test_bb_scoring.py::test_contribution_depth_saturates_at_200_commits[BB-FR13-01]
+PASSED tests/blackbox/test_bb_scoring.py::test_contribution_depth_saturates_at_200_commits[BB-FR13-02]
+PASSED tests/blackbox/test_bb_scoring.py::test_contribution_depth_saturates_at_200_commits[BB-FR13-03]
+PASSED tests/blackbox/test_bb_scoring.py::test_contribution_depth_saturates_at_200_commits[BB-FR13-04]
+PASSED tests/blackbox/test_bb_scoring.py::test_competitive_programming_saturates_at_2400[BB-FR13-05]
+PASSED tests/blackbox/test_bb_scoring.py::test_competitive_programming_saturates_at_2400[BB-FR13-06]
+PASSED tests/blackbox/test_bb_scoring.py::test_competitive_programming_saturates_at_2400[BB-FR13-07]
+PASSED tests/blackbox/test_bb_scoring.py::test_competitive_programming_saturates_at_2400[BB-FR13-08]
+PASSED tests/blackbox/test_bb_scoring.py::test_total_never_exceeds_100_with_out_of_range_inputs
+PASSED tests/blackbox/test_bb_scoring.py::test_unknown_verdict_label_counts_as_zero_not_negative
+PASSED tests/blackbox/test_bb_scoring.py::test_weight_valid_boundaries_accepted[BB-FR13-11]
+PASSED tests/blackbox/test_bb_scoring.py::test_weight_valid_boundaries_accepted[BB-FR13-12]
+PASSED tests/blackbox/test_bb_scoring.py::test_weight_valid_boundaries_accepted[BB-FR13-13]
+PASSED tests/blackbox/test_bb_scoring.py::test_weight_invalid_classes_rejected[BB-FR13-14]
+PASSED tests/blackbox/test_bb_scoring.py::test_weight_invalid_classes_rejected[BB-FR13-15]
+PASSED tests/blackbox/test_bb_scoring.py::test_weight_invalid_classes_rejected[BB-FR13-16]
+PASSED tests/blackbox/test_bb_scoring.py::test_single_tiny_positive_weight_gives_that_component_alone
+PASSED tests/blackbox/test_bb_verification.py::test_rating_rule_with_fractional_80_percent[BB-FR12-01]
+PASSED tests/blackbox/test_bb_verification.py::test_rating_rule_with_fractional_80_percent[BB-FR12-02]
+PASSED tests/blackbox/test_bb_verification.py::test_rating_rule_with_fractional_80_percent[BB-FR12-03]
+PASSED tests/blackbox/test_bb_verification.py::test_rating_without_evidence_or_claimed_value_is_unsupported[BB-FR12-04]
+PASSED tests/blackbox/test_bb_verification.py::test_rating_without_evidence_or_claimed_value_is_unsupported[BB-FR12-05]
+PASSED tests/blackbox/test_bb_verification.py::test_rating_without_evidence_or_claimed_value_is_unsupported[BB-FR12-06]
+PASSED tests/blackbox/test_bb_verification.py::test_rating_platform_name_is_case_insensitive
+PASSED tests/blackbox/test_bb_verification.py::test_leetcode_rating_exactly_80_percent_is_partial
+PASSED tests/blackbox/test_bb_verification.py::test_skill_duration_boundaries[BB-FR12-09]
+PASSED tests/blackbox/test_bb_verification.py::test_skill_duration_boundaries[BB-FR12-10]
+PASSED tests/blackbox/test_bb_verification.py::test_skill_duration_boundaries[BB-FR12-11]
+PASSED tests/blackbox/test_bb_verification.py::test_skill_duration_boundaries[BB-FR12-12]
+PASSED tests/blackbox/test_bb_verification.py::test_skill_duration_boundaries[BB-FR12-13]
+PASSED tests/blackbox/test_bb_verification.py::test_skill_duration_boundaries[BB-FR12-14]
+PASSED tests/blackbox/test_bb_verification.py::test_unparseable_dates_count_as_no_dates
+PASSED tests/blackbox/test_bb_verification.py::test_skill_claim_without_any_evidence_is_unsupported
+PASSED tests/unit/collection/test_candidate_input.py::test_name_length_0_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_name_length_1_accepted
+PASSED tests/unit/collection/test_candidate_input.py::test_name_length_200_accepted
+PASSED tests/unit/collection/test_candidate_input.py::test_name_length_201_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_name_whitespace_only_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_email_valid_class_accepted[octo@example.org]
+PASSED tests/unit/collection/test_candidate_input.py::test_email_valid_class_accepted[first.last+tag@uni.edu.pk]
+PASSED tests/unit/collection/test_candidate_input.py::test_email_invalid_class_rejected[]
+PASSED tests/unit/collection/test_candidate_input.py::test_email_invalid_class_rejected[octo.example.org]
+PASSED tests/unit/collection/test_candidate_input.py::test_email_invalid_class_rejected[octo@]
+PASSED tests/unit/collection/test_candidate_input.py::test_email_invalid_class_rejected[@example.org]
+PASSED tests/unit/collection/test_candidate_input.py::test_email_invalid_class_rejected[octo@example]
+PASSED tests/unit/collection/test_candidate_input.py::test_email_invalid_class_rejected[oc to@example.org]
+PASSED tests/unit/collection/test_candidate_input.py::test_github_handle_length_39_accepted
+PASSED tests/unit/collection/test_candidate_input.py::test_github_handle_length_40_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_github_handle_leading_hyphen_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_github_handle_inner_hyphen_accepted
+PASSED tests/unit/collection/test_candidate_input.py::test_unknown_source_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_all_three_known_sources_accepted
+PASSED tests/unit/collection/test_candidate_input.py::test_resume_length_20000_accepted
+PASSED tests/unit/collection/test_candidate_input.py::test_resume_length_20001_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_resume_empty_rejected
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_max_retries_boundaries[BB-FR01-17]
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_max_retries_boundaries[BB-FR01-18]
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_max_retries_boundaries[BB-FR01-19]
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_max_retries_boundaries[BB-FR01-20]
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_link_threshold_boundaries[BB-FR01-21]
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_link_threshold_boundaries[BB-FR01-22]
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_link_threshold_boundaries[BB-FR01-23]
+PASSED tests/unit/collection/test_candidate_input.py::test_run_config_link_threshold_boundaries[BB-FR01-24]
+XFAIL tests/blackbox/test_bb_inputs.py::test_whitespace_only_job_title_rejected - BB defect BB-DEF-04: a whitespace-only job title is accepted although blank names/skills are rejected
+XFAIL tests/blackbox/test_bb_inputs.py::test_run_config_non_integer_count_rejected[BB-FR05-08] - BB defect BB-DEF-01: RunConfig accepts non-integer counts; they fail later (range() TypeError for max_retries/extraction_workers, fractional semaphore for max_requests_per_source)
+XFAIL tests/blackbox/test_bb_inputs.py::test_run_config_non_integer_count_rejected[BB-FR07-03] - BB defect BB-DEF-01: RunConfig accepts non-integer counts; they fail later (range() TypeError for max_retries/extraction_workers, fractional semaphore for max_requests_per_source)
+XFAIL tests/blackbox/test_bb_inputs.py::test_run_config_non_integer_count_rejected[BB-FR05-09] - BB defect BB-DEF-01: RunConfig accepts non-integer counts; they fail later (range() TypeError for max_retries/extraction_workers, fractional semaphore for max_requests_per_source)
+XFAIL tests/blackbox/test_bb_inputs.py::test_min_interval_nan_rejected - BB defect BB-DEF-02: min_interval_seconds=NaN is accepted and silently disables rate limiting
+XFAIL tests/blackbox/test_bb_inputs.py::test_max_repos_negative_rejected - BB defect BB-DEF-03: max_repos is never validated; -1 is accepted and silently drops the last repository through list slicing
+164 passed, 6 xfailed, 1 warning in 10.33s

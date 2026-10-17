@@ -1,0 +1,155 @@
+....................................................                     [100%]
+============================== warnings summary ===============================
+.venv\lib\site-packages\fastapi\testclient.py:1
+  C:\Users\DELL\osint-evidence-pipeline\.venv\lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================================== PASSES ====================================
+_________________ test_unlinked_account_evidence_is_excluded __________________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "753144cf-85f7-4500-b288-3eb1ae33b9ad", "candidate_id": "77f60ba5-a58c-4e1f-b1f7-6f287ce90282", "sources": ["codeforces"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "753144cf-85f7-4500-b288-3eb1ae33b9ad", "candidate_id": "77f60ba5-a58c-4e1f-b1f7-6f287ce90282", "stage": "collect", "fetches": 3, "failures": []}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "753144cf-85f7-4500-b288-3eb1ae33b9ad", "candidate_id": "77f60ba5-a58c-4e1f-b1f7-6f287ce90282", "stage": "extract", "nodes": 3}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "753144cf-85f7-4500-b288-3eb1ae33b9ad", "candidate_id": "77f60ba5-a58c-4e1f-b1f7-6f287ce90282", "stage": "resolve", "linked": [], "kept_nodes": 0}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "753144cf-85f7-4500-b288-3eb1ae33b9ad", "candidate_id": "77f60ba5-a58c-4e1f-b1f7-6f287ce90282", "stage": "score", "coverage": 0.0, "claims": 1, "total": 0.0}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "753144cf-85f7-4500-b288-3eb1ae33b9ad", "status": "done", "total": 0.0}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+__________ test_replay_reproduces_evidence_and_score_without_network __________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "stage": "collect", "fetches": 10, "failures": []}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "stage": "extract", "nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "stage": "resolve", "linked": ["codeforces:octo-dev", "github:octo-dev", "leetcode:octo-dev"], "kept_nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "stage": "score", "coverage": 0.6666666666666666, "claims": 4, "total": 48.44}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "status": "done", "total": 48.44}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "stage": "extract", "nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "stage": "resolve", "linked": ["codeforces:octo-dev", "github:octo-dev", "leetcode:octo-dev"], "kept_nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "candidate_id": "a89cf142-9888-406e-afee-403b83ccd391", "stage": "score", "coverage": 0.6666666666666666, "claims": 4, "total": 48.44}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_replayed", "run_id": "149f0a0d-5af0-40b2-b191-1a7e9f29baf3", "evidence_identical": true, "score_identical": true}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_replayed
+__________________ test_run_report_replay_delete_round_trip ___________________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "stage": "collect", "fetches": 10, "failures": []}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "stage": "extract", "nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "stage": "resolve", "linked": ["codeforces:octo-dev", "github:octo-dev", "leetcode:octo-dev"], "kept_nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "stage": "score", "coverage": 1.0, "claims": 2, "total": 75.94}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "status": "done", "total": 75.94}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "stage": "extract", "nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "stage": "resolve", "linked": ["codeforces:octo-dev", "github:octo-dev", "leetcode:octo-dev"], "kept_nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35", "stage": "score", "coverage": 1.0, "claims": 2, "total": 75.94}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_replayed", "run_id": "2ed75b47-c668-498c-af8e-0e07d98f829d", "evidence_identical": true, "score_identical": true}
+{"level": "INFO", "logger": "pipeline.run", "event": "candidate_deleted", "candidate_id": "5ebb2414-222a-468f-a9f7-29b6b4105b35"}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_replayed
+INFO     pipeline.run:log.py:42 candidate_deleted
+________ test_one_source_failing_gives_partial_run_with_other_evidence ________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "cfc6ca6d-f17f-400f-8e29-dddaf2bca67d", "candidate_id": "9f84180e-ba56-4bdd-8181-2eb088f8bbe5", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "cfc6ca6d-f17f-400f-8e29-dddaf2bca67d", "candidate_id": "9f84180e-ba56-4bdd-8181-2eb088f8bbe5", "stage": "collect", "fetches": 4, "failures": [["github", "HTTP_503"]]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "cfc6ca6d-f17f-400f-8e29-dddaf2bca67d", "candidate_id": "9f84180e-ba56-4bdd-8181-2eb088f8bbe5", "stage": "extract", "nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "cfc6ca6d-f17f-400f-8e29-dddaf2bca67d", "candidate_id": "9f84180e-ba56-4bdd-8181-2eb088f8bbe5", "stage": "resolve", "linked": ["codeforces:octo-dev", "leetcode:octo-dev"], "kept_nodes": 6}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "cfc6ca6d-f17f-400f-8e29-dddaf2bca67d", "candidate_id": "9f84180e-ba56-4bdd-8181-2eb088f8bbe5", "stage": "score", "coverage": 0.3333333333333333, "claims": 4, "total": 33.67}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "cfc6ca6d-f17f-400f-8e29-dddaf2bca67d", "status": "partial", "total": 33.67}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+______________ test_full_run_produces_bounded_explainable_report ______________
+---------------------------- Captured stderr call -----------------------------
+{"level": "INFO", "logger": "pipeline.run", "event": "run_started", "run_id": "d776b146-1e6a-4b88-a15a-acc4aceb88a0", "candidate_id": "91acf7bc-a08d-47cf-8e09-7dbb64d48129", "sources": ["codeforces", "github", "leetcode"]}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "d776b146-1e6a-4b88-a15a-acc4aceb88a0", "candidate_id": "91acf7bc-a08d-47cf-8e09-7dbb64d48129", "stage": "collect", "fetches": 10, "failures": []}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "d776b146-1e6a-4b88-a15a-acc4aceb88a0", "candidate_id": "91acf7bc-a08d-47cf-8e09-7dbb64d48129", "stage": "extract", "nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "d776b146-1e6a-4b88-a15a-acc4aceb88a0", "candidate_id": "91acf7bc-a08d-47cf-8e09-7dbb64d48129", "stage": "resolve", "linked": ["codeforces:octo-dev", "github:octo-dev", "leetcode:octo-dev"], "kept_nodes": 16}
+{"level": "INFO", "logger": "pipeline.run", "event": "stage_done", "run_id": "d776b146-1e6a-4b88-a15a-acc4aceb88a0", "candidate_id": "91acf7bc-a08d-47cf-8e09-7dbb64d48129", "stage": "score", "coverage": 0.6666666666666666, "claims": 4, "total": 48.44}
+{"level": "INFO", "logger": "pipeline.run", "event": "run_finished", "run_id": "d776b146-1e6a-4b88-a15a-acc4aceb88a0", "status": "done", "total": 48.44}
+------------------------------ Captured log call ------------------------------
+INFO     pipeline.run:log.py:42 run_started
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 stage_done
+INFO     pipeline.run:log.py:42 run_finished
+=========================== short test summary info ===========================
+PASSED tests/unit/collection/test_collector_retry.py::test_zero_retries_means_a_single_attempt
+PASSED tests/unit/collection/test_collector_retry.py::test_gives_up_after_max_retries_with_last_status_code
+PASSED tests/unit/collection/test_collector_retry.py::test_succeeds_on_second_try_after_503
+PASSED tests/unit/collection/test_collector_retry.py::test_429_is_retried
+PASSED tests/unit/collection/test_collector_retry.py::test_404_is_not_found_and_not_retried
+PASSED tests/unit/collection/test_collector_retry.py::test_other_client_error_is_reported_with_its_status
+PASSED tests/unit/collection/test_collector_retry.py::test_transport_failure_is_retried[TIMEOUT]
+PASSED tests/unit/collection/test_collector_retry.py::test_transport_failure_is_retried[NETWORK]
+PASSED tests/unit/collection/test_collector_retry.py::test_timeout_forever_keeps_timeout_code
+PASSED tests/unit/collection/test_collector_retry.py::test_malformed_body_is_reported_and_not_retried
+PASSED tests/unit/collection/test_collector_retry.py::test_non_transient_transport_error_is_not_retried
+PASSED tests/unit/identity/test_resolver.py::test_threshold_boundary[0.4999-False]
+PASSED tests/unit/identity/test_resolver.py::test_threshold_boundary[0.5-True]
+PASSED tests/unit/identity/test_resolver.py::test_threshold_boundary[0.5001-True]
+PASSED tests/unit/identity/test_resolver.py::test_invalid_threshold_raises[-0.01]
+PASSED tests/unit/identity/test_resolver.py::test_invalid_threshold_raises[1.01]
+PASSED tests/unit/identity/test_resolver.py::test_invalid_threshold_raises[0.5]
+PASSED tests/unit/identity/test_resolver.py::test_invalid_threshold_raises[None]
+PASSED tests/unit/identity/test_resolver.py::test_threshold_is_configurable
+PASSED tests/system/test_pipeline_system.py::test_unlinked_account_evidence_is_excluded
+PASSED tests/unit/matching/test_requirement_matcher.py::test_no_skill_matched_gives_zero_coverage
+PASSED tests/unit/matching/test_requirement_matcher.py::test_partial_and_full_coverage[required0-0.5]
+PASSED tests/unit/matching/test_requirement_matcher.py::test_partial_and_full_coverage[required1-0.3333333333333333]
+PASSED tests/unit/matching/test_requirement_matcher.py::test_partial_and_full_coverage[required2-1.0]
+PASSED tests/unit/matching/test_requirement_matcher.py::test_all_skills_matched_through_aliases
+PASSED tests/unit/matching/test_requirement_matcher.py::test_required_skills_are_normalised_and_deduplicated_in_order
+PASSED tests/unit/scoring/test_rating_rule.py::test_rating_boundaries[1601-supported]
+PASSED tests/unit/scoring/test_rating_rule.py::test_rating_boundaries[1600-supported]
+PASSED tests/unit/scoring/test_rating_rule.py::test_rating_boundaries[1599-partially_supported]
+PASSED tests/unit/scoring/test_rating_rule.py::test_rating_boundaries[1280-partially_supported]
+PASSED tests/unit/scoring/test_rating_rule.py::test_rating_boundaries[1279-unsupported]
+PASSED tests/unit/scoring/test_rating_rule.py::test_other_platform_is_not_evidence
+PASSED tests/unit/scoring/test_rating_rule.py::test_achievement_without_rating_is_unsupported
+PASSED tests/unit/scoring/test_skill_rule.py::test_sufficient_duration_is_supported
+PASSED tests/unit/scoring/test_skill_rule.py::test_insufficient_duration_is_partially_supported
+PASSED tests/unit/scoring/test_skill_rule.py::test_dates_missing_with_years_claimed_is_partially_supported
+PASSED tests/unit/scoring/test_skill_rule.py::test_fractional_years_need_the_next_whole_year
+PASSED tests/unit/scoring/test_skill_rule.py::test_no_matching_node_is_unsupported
+PASSED tests/unit/scoring/test_scoring.py::test_all_zero_scores_zero
+PASSED tests/unit/scoring/test_scoring.py::test_all_perfect_scores_one_hundred
+PASSED tests/unit/scoring/test_scoring.py::test_invalid_weights_raise[weights0]
+PASSED tests/unit/scoring/test_scoring.py::test_invalid_weights_raise[weights1]
+PASSED tests/unit/scoring/test_scoring.py::test_invalid_weights_raise[weights2]
+PASSED tests/unit/scoring/test_scoring.py::test_invalid_weights_raise[weights3]
+PASSED tests/unit/scoring/test_scoring.py::test_custom_weights_override_defaults
+PASSED tests/system/test_pipeline_system.py::test_replay_reproduces_evidence_and_score_without_network
+PASSED tests/system/test_pipeline_system.py::test_replay_of_unknown_run_is_rejected
+PASSED tests/system/test_api.py::test_run_report_replay_delete_round_trip
+PASSED tests/system/test_api.py::test_invalid_input_is_rejected_at_the_boundary
+PASSED tests/system/test_pipeline_system.py::test_one_source_failing_gives_partial_run_with_other_evidence
+PASSED tests/system/test_pipeline_system.py::test_full_run_produces_bounded_explainable_report
+PASSED tests/unit/collection/test_collection_runner.py::test_one_source_failing_forever_yields_a_partial_result
+52 passed, 1 warning in 5.46s
