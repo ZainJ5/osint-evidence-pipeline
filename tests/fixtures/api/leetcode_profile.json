@@ -1,0 +1,27 @@
+{
+  "data": {
+    "matchedUser": {
+      "username": "octo-dev",
+      "githubUrl": "https://github.com/octo-dev",
+      "profile": {
+        "realName": "Octo Developer",
+        "websites": ["https://octo-dev.example.org"]
+      },
+      "submitStatsGlobal": {
+        "acSubmissionNum": [
+          {"difficulty": "All", "count": 312},
+          {"difficulty": "Easy", "count": 140},
+          {"difficulty": "Medium", "count": 151},
+          {"difficulty": "Hard", "count": 21}
+        ]
+      },
+      "languageProblemCount": [
+        {"languageName": "Python3", "problemsSolved": 254},
+        {"languageName": "C++", "problemsSolved": 71}
+      ]
+    },
+    "userContestRanking": {
+      "rating": 1687.42
+    }
+  }
+}
