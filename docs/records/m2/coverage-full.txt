@@ -1,0 +1,55 @@
+........................................................................ [ 12%]
+........................................................................ [ 25%]
+........................................................................ [ 38%]
+........................................................................ [ 50%]
+........................................................................ [ 63%]
+........................................................................ [ 76%]
+........................................................................ [ 88%]
+...............................................................          [100%]
+============================== warnings summary ===============================
+.venv\lib\site-packages\fastapi\testclient.py:1
+  C:\Users\DELL\osint-evidence-pipeline\.venv\lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.10.0-final-0 _______________
+
+Name                                       Stmts   Miss Branch BrPart  Cover
+----------------------------------------------------------------------------
+pipeline\core\__init__.py                      0      0      0      0   100%
+pipeline\core\collection\__init__.py           6      0      0      0   100%
+pipeline\core\collection\codeforces.py        27      0      6      0   100%
+pipeline\core\collection\collector.py         63      0     14      0   100%
+pipeline\core\collection\factory.py           30      0      4      0   100%
+pipeline\core\collection\github.py            33      1      8      1    95%
+pipeline\core\collection\leetcode.py          19      0      4      0   100%
+pipeline\core\collection\rate_limiter.py      41      3      8      0    94%
+pipeline\core\collection\runner.py            31      0      8      0   100%
+pipeline\core\errors.py                       22      0      2      0   100%
+pipeline\core\identity\__init__.py             0      0      0      0   100%
+pipeline\core\identity\profiles.py            36      1     10      1    96%
+pipeline\core\identity\resolver.py            44      0     18      0   100%
+pipeline\core\identity\signals.py             58      0     18      0   100%
+pipeline\core\inputs.py                       63      0     24      0   100%
+pipeline\core\log.py                          33      0      8      0   100%
+pipeline\core\matching\__init__.py             0      0      0      0   100%
+pipeline\core\matching\matcher.py             68      1     28      1    98%
+pipeline\core\matching\normalizer.py          14      0      6      0   100%
+pipeline\core\matching\vector_index.py        20      0      4      0   100%
+pipeline\core\models.py                      135      0      2      0   100%
+pipeline\core\pipeline.py                    142      4     18      0    98%
+pipeline\core\ports.py                        21      0      0      0   100%
+pipeline\core\scoring\__init__.py              0      0      0      0   100%
+pipeline\core\scoring\claims.py               37      0     14      0   100%
+pipeline\core\scoring\rules.py                70      0     20      0   100%
+pipeline\core\scoring\scoring.py              56      0     14      0   100%
+pipeline\core\scoring\verifier.py             14      0      4      0   100%
+pipeline\core\snapshot\__init__.py             0      0      0      0   100%
+pipeline\core\snapshot\extractor.py           45      1     12      0    98%
+pipeline\core\snapshot\parsers.py            121      3     42      4    96%
+pipeline\core\snapshot\store.py               33      0      6      0   100%
+----------------------------------------------------------------------------
+TOTAL                                       1282     14    302      7    99%
+Required test coverage of 60% reached. Total coverage: 98.67%
+567 passed, 1 warning in 30.00s
