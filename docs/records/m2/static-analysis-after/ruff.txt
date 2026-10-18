@@ -1,0 +1,11 @@
+$ ruff --version
+ruff 0.17.5
+$ ruff check pipeline tests --output-format concise
+All checks passed!
+exit=0
+$ ruff format --check pipeline tests
+97 files already formatted
+exit=0
+$ ruff check . (as run in CI)
+All checks passed!
+exit=0
