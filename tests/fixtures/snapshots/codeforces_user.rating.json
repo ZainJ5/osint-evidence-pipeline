@@ -1,0 +1,4 @@
+{"status": "OK", "result": [
+  {"contestId": 1500, "contestName": "Round 1", "rank": 900, "ratingUpdateTimeSeconds": 1609459200, "oldRating": 1500, "newRating": 1720},
+  {"contestId": 1600, "contestName": "Round 2", "rank": 1500, "ratingUpdateTimeSeconds": 1640995200, "oldRating": 1720, "newRating": 1650}
+]}
