@@ -1,0 +1,98 @@
+$ pylint --version
+pylint 4.1.4
+astroid 4.3.4
+Python 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+$ pylint pipeline
+************* Module pipeline.adapters.fakes
+pipeline\adapters\fakes.py:24:35: W0621: Redefining name 'json' from outer scope (line 4) (redefined-outer-name)
+pipeline\adapters\fakes.py:50:35: W0621: Redefining name 'json' from outer scope (line 4) (redefined-outer-name)
+pipeline\adapters\fakes.py:54:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.errors
+pipeline\core\errors.py:17:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\errors.py:21:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\errors.py:25:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\errors.py:29:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\errors.py:33:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\errors.py:37:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\errors.py:41:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.inputs
+pipeline\core\inputs.py:19:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\inputs.py:42:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\inputs.py:58:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.log
+pipeline\core\log.py:20:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\log.py:29:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.models
+pipeline\core\models.py:18:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:28:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:42:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:51:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:62:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:76:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:90:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:97:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:104:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:115:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:125:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:136:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:149:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:160:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:170:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\models.py:178:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.pipeline
+pipeline\core\pipeline.py:32:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\pipeline.py:45:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\pipeline.py:55:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.ports
+pipeline\core\ports.py:14:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\ports.py:20:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\ports.py:30:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\ports.py:41:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\ports.py:47:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\ports.py:65:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.collection.codeforces
+pipeline\core\collection\codeforces.py:13:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.collection.factory
+pipeline\core\collection\factory.py:16:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.collection.github
+pipeline\core\collection\github.py:11:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.collection.leetcode
+pipeline\core\collection\leetcode.py:24:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.identity.signals
+pipeline\core\identity\signals.py:33:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\identity\signals.py:43:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\identity\signals.py:74:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\identity\signals.py:89:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.matching.matcher
+pipeline\core\matching\matcher.py:11:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\matching\matcher.py:67:11: C1802: Do not use `len(SEQUENCE)` without comparison to determine if a sequence is empty (use-implicit-booleaness-not-len)
+************* Module pipeline.core.matching.normalizer
+pipeline\core\matching\normalizer.py:40:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.matching.vector_index
+pipeline\core\matching\vector_index.py:8:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.scoring.claims
+pipeline\core\scoring\claims.py:71:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.scoring.rules
+pipeline\core\scoring\rules.py:13:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\scoring\rules.py:47:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\core\scoring\rules.py:74:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.scoring.scoring
+pipeline\core\scoring\scoring.py:19:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.scoring.verifier
+pipeline\core\scoring\verifier.py:8:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.core.snapshot.extractor
+pipeline\core\snapshot\extractor.py:12:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module pipeline.interface.api
+pipeline\interface\api.py:15:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\interface\api.py:22:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\interface\api.py:29:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\interface\api.py:34:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\interface\api.py:41:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\interface\api.py:48:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\interface\api.py:57:0: C0115: Missing class docstring (missing-class-docstring)
+pipeline\interface\api.py:65:4: W0621: Redefining name 'app' from outer scope (line 103) (redefined-outer-name)
+
+------------------------------------------------------------------
+Your code has been rated at 9.59/10 (previous run: 9.59/10, +0.00)
+
+exit=20

@@ -1,0 +1,10 @@
+$ pylint --version
+pylint 4.1.4
+astroid 4.3.4
+Python 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+$ pylint pipeline
+
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+
+exit=0

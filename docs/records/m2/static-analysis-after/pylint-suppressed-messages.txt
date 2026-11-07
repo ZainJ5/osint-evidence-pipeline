@@ -1,0 +1,124 @@
+$ pylint pipeline --disable=all --enable=missing-module-docstring,missing-function-docstring,too-few-public-methods,too-many-arguments,too-many-positional-arguments,too-many-instance-attributes
+************* Module pipeline.adapters.fakes
+pipeline\adapters\fakes.py:87:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\adapters\fakes.py:92:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\adapters\fakes.py:130:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\adapters\fakes.py:177:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\adapters\fakes.py:216:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.adapters.http
+pipeline\adapters\http.py:31:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.adapters.migrate
+pipeline\adapters\migrate.py:31:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.adapters.minio_store
+pipeline\adapters\minio_store.py:23:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.adapters.postgres
+pipeline\adapters\postgres.py:39:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\adapters\postgres.py:45:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\adapters\postgres.py:61:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\adapters\postgres.py:78:0: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\adapters\postgres.py:94:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\adapters\postgres.py:205:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.log
+pipeline\core\log.py:20:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\log.py:45:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.models
+pipeline\core\models.py:30:0: R0902: Too many instance attributes (9/7) (too-many-instance-attributes)
+pipeline\core\models.py:64:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\models.py:70:0: R0902: Too many instance attributes (10/7) (too-many-instance-attributes)
+pipeline\core\models.py:86:0: R0902: Too many instance attributes (9/7) (too-many-instance-attributes)
+pipeline\core\models.py:139:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\models.py:153:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\models.py:165:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.pipeline
+pipeline\core\pipeline.py:32:0: R0902: Too many instance attributes (9/7) (too-many-instance-attributes)
+pipeline\core\pipeline.py:59:0: R0902: Too many instance attributes (11/7) (too-many-instance-attributes)
+pipeline\core\pipeline.py:62:4: R0913: Too many arguments (8/5) (too-many-arguments)
+pipeline\core\pipeline.py:62:4: R0917: Too many positional arguments (8/5) (too-many-positional-arguments)
+pipeline\core\pipeline.py:140:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.ports
+pipeline\core\ports.py:38:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:41:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:44:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:47:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\ports.py:59:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:55:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\ports.py:66:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:69:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:72:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:79:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\ports.py:75:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.collection.collector
+pipeline\core\collection\collector.py:30:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\collection\collector.py:33:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.collection.factory
+pipeline\core\collection\factory.py:22:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\collection\factory.py:28:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\collection\factory.py:32:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\collection\factory.py:36:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\collection\factory.py:41:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.collection.rate_limiter
+pipeline\core\collection\rate_limiter.py:26:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\collection\rate_limiter.py:30:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.collection.runner
+pipeline\core\collection\runner.py:30:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\collection\runner.py:35:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.identity.resolver
+pipeline\core\identity\resolver.py:44:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\identity\resolver.py:21:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.identity.signals
+pipeline\core\identity\signals.py:26:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\identity\signals.py:20:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\identity\signals.py:33:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\identity\signals.py:45:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\identity\signals.py:78:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\identity\signals.py:95:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.matching.matcher
+pipeline\core\matching\matcher.py:23:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\matching\matcher.py:11:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.matching.normalizer
+pipeline\core\matching\normalizer.py:46:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\matching\normalizer.py:40:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.matching.vector_index
+pipeline\core\matching\vector_index.py:17:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.scoring.claims
+pipeline\core\scoring\claims.py:77:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\scoring\claims.py:71:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.scoring.rules
+pipeline\core\scoring\rules.py:20:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\scoring\rules.py:14:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\scoring\rules.py:55:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\scoring\rules.py:85:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.scoring.scoring
+pipeline\core\scoring\scoring.py:24:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\scoring\scoring.py:24:4: R0913: Too many arguments (6/5) (too-many-arguments)
+pipeline\core\scoring\scoring.py:24:4: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+pipeline\core\scoring\scoring.py:20:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\scoring\scoring.py:86:4: R0913: Too many arguments (6/5) (too-many-arguments)
+pipeline\core\scoring\scoring.py:86:4: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+pipeline\core\scoring\scoring.py:80:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\scoring\scoring.py:107:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\scoring\scoring.py:107:4: R0913: Too many arguments (6/5) (too-many-arguments)
+pipeline\core\scoring\scoring.py:107:4: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+pipeline\core\scoring\scoring.py:101:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.scoring.verifier
+pipeline\core\scoring\verifier.py:14:4: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\scoring\verifier.py:8:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.snapshot.extractor
+pipeline\core\snapshot\extractor.py:12:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+************* Module pipeline.core.snapshot.parsers
+pipeline\core\snapshot\parsers.py:12:0: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\snapshot\parsers.py:38:0: C0116: Missing function or method docstring (missing-function-docstring)
+pipeline\core\snapshot\parsers.py:42:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\snapshot\parsers.py:52:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\snapshot\parsers.py:119:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\snapshot\parsers.py:183:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+pipeline\core\snapshot\parsers.py:214:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.core.snapshot.store
+pipeline\core\snapshot\store.py:62:4: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module pipeline.interface.api
+pipeline\interface\api.py:77:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+-------------------------------------------------------------------
+Your code has been rated at 9.45/10 (previous run: 10.00/10, -0.55)
+
+exit=24
