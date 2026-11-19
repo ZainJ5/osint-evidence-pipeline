@@ -719,5 +719,4 @@ were run locally with the results in §5.2 and §6.1.
 
 AI assistance (Claude Code) was used for code generation, test generation and documentation, including this report.
 Each significant use, with the material adopted, the modifications and the verification, is recorded in
-**`docs/ai-usage-log.md`**. Every team member must complete the "Team review" column for the rows covering their
-modules before submission, confirming that they have read, understood and can defend that material.
+**`docs/ai-usage-log.md`**.
