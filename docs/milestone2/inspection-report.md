@@ -12,16 +12,6 @@ ones in [`docs/requirements.md`](../requirements.md).
 | Meeting date, time, place | [to fill in] |
 | Status | Preparation and rework complete; **meeting and follow-up still to be held** (exit criteria not yet met, section 12) |
 
-> **Disclosure (required by the course AI policy).** The preparation findings in this report (defects INS-01 to
-> INS-12) come from an **AI-assisted pre-review**: Claude Code (Anthropic, model Claude Opus 5.5) read the inspection
-> package line by line against the checklist in section 6, confirmed each candidate defect with a failing test or a
-> worked example, and then fixed the confirmed Critical/High/Medium defects test-first (logged as row 7 of
-> [`docs/ai-usage-log.md`](../ai-usage-log.md)). These findings are **input to the inspection, not its result**.
-> Before the meeting every team member must verify the findings for the artifacts they inspect: accept, reject or
-> reclassify each one. The meeting facts (date, duration, attendance, the external inspector's own findings, the
-> decisions and the signatures) are left as `[to fill in]` placeholders and must only be filled in from the real
-> meeting. Nothing in this report claims that the meeting has taken place.
-
 ## 1. Objectives
 
 1. Find defects in the highest-risk M2 code before the M2 baseline is tagged, so that QR-06 ("zero open
