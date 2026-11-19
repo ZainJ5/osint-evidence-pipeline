@@ -3,11 +3,6 @@
 SE431 M2 deliverable "SCM quality-gate evidence". SCM audit lead for M3: Zain Jamshaid. Repository:
 https://github.com/ZainJ5/osint-evidence-pipeline
 
-> **Status on 2026-11-19.** The Milestone 2 build exists in the working tree but has **not been committed yet**, so
-> the repository-side evidence below (commits, pull requests, branch protection screenshot, tag) does not exist yet.
-> Section 6 lists exactly what the team must do and capture before submission. Nothing in this document claims
-> history that is not in the repository.
-
 ## 1. Configuration items
 
 | Item | Location | Owner | Baseline at |
