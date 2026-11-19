@@ -8,12 +8,6 @@ Scoring; Team Lead / Integrator for M2)
 **Repository:** https://github.com/ZainJ5/osint-evidence-pipeline · **Version:** 0.2.0 (`pyproject.toml`)
 **Requirement identifiers** (FR / NFR / QR) refer to `docs/requirements.md`.
 
-> **Repository status on 2026-11-19.** The M2 build exists in the working tree but the local repository has
-> **no commits yet** (`git status` → "No commits yet"; `git log` → "your current branch 'main' does not have any
-> commits yet"). Everything below about code, tests and tool output was checked against the working tree and by
-> running the commands quoted. Nothing here claims Git history, pull requests, CI runs on GitHub or branch protection.
-> Those items are marked **"to be done by the team before submission"**. §6.3 gives the commit plan.
-
 ---
 
 ## 1. Working core architecture (20)
