@@ -216,6 +216,8 @@ Source: `static-analysis-after/complexity.txt`. QR-11's limit is V(G) ≤ 10. No
 | 9 | `build_account_ref` | `pipeline/core/identity/profiles.py:44` | 5 | No | `tests/unit/identity/test_profiles.py` |
 | 10 | `FakeHttpClient._serve` | `pipeline/adapters/fakes.py:29` | 5 | No: test double. | Used by every collection test |
 
+**Update after this run:** `FakeLLMProvider` was removed (the tests now use `RuleBasedClaimProvider`) and `create_app` was split up. On the current code no function is above V(G) 7; the highest is `CandidateInput.__post_init__` (7).
+
 Notes:
 
 - **White-box targets below the top 10.** The basis-path suites also cover:

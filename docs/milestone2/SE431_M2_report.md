@@ -32,7 +32,7 @@ Raw evidence (tool outputs, coverage, inspection baseline hashes) is in `docs/re
 | Automated tests | 734 passed: 723 non-integration + 11 integration against PostgreSQL 16 and MinIO | `pytest`; CI run https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 |
 | Line coverage of `pipeline.core` | 99 % (1,642 statements, 22 missed; gate: 60 %) | `docs/records/m2/coverage-full.txt` |
 | Pylint | 10.00/10 (baseline 9.59), CI gate `--fail-under=9.9` | static analysis report |
-| Ruff | 0 findings; max cyclomatic complexity 10, none above | static analysis report |
+| Ruff | 0 findings; max cyclomatic complexity 7 (`CandidateInput.__post_init__`) | static analysis report |
 | Defects found at M2 | 12 inspection (0 Critical, 2 High, 3 Medium, 7 Low), 4 black-box, 1 white-box (duplicate of INS-08), 1 review (PII in rationale) | section 4 |
 | Open defects | 1 Low (INS-10), deferred to M3 with justification | section 4 |
 | Open Critical/High defects | 0 (QR-06 met) | section 4 |
@@ -76,7 +76,7 @@ black-box and white-box design documents.
 | NFR-02 / QR-04 | FR-05 | `test_one_source_failing_gives_partial_run_with_other_evidence`; BB-NFR02-01..05 (timeout, 5xx, malformed body, 404) | Verified |
 | NFR-03 / QR-07 | FR-02, FR-10 | Not measured yet; profiling harness and 10 000-vector benchmark planned | Planned (M3) |
 | NFR-04 / QR-10 | all | 99 % line coverage of `pipeline.core`; every port has a fake in `adapters/fakes.py` | Verified |
-| NFR-05 / QR-11 | all | Ruff 0 findings, Pylint 10.00, V(G) ≤ 10 everywhere; CI gates | Verified |
+| NFR-05 / QR-11 | all | Ruff 0 findings, Pylint 10.00, max V(G) 7; CI gates | Verified |
 | NFR-06 / QR-13 | FR-01 | `tests/unit/core/test_log.py` (email scrubbing); `test_rationale_does_not_store_the_email_address`; gitleaks step in CI over the full history | Verified: gitleaks passed in https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 |
 | NFR-07 / QR-05 | FR-14 | Replay tests above. A kill-and-restart test during extraction is not written yet | Partial (QR-05 restart test: M3) |
 | NFR-08 | FR-02..04 | CI grep for selenium/playwright; collectors use official API/public endpoints only (inspection checklist) | Verified |
@@ -127,7 +127,7 @@ Probability/impact L/M/H; priority rule as in v1. "Evidence" cites M2 artifacts 
 | ID | Risk | P | I | Prio | Mitigation (M2 status) | Evidence at M2 | Owner | Status | Residual risk |
 |---|---|---|---|---|---|---|---|---|---|
 | R-01 | Source API rate limits, token revocation or API changes block collection or the demo | H | H | H | Recorded fixtures for all tests (done); per-source limiter with Codeforces 2 s floor (done); replay for demo (done); `GITHUB_TOKEN` support (done) | Live smoke test hit GitHub's unauthenticated limit (HTTP 403) and the run finished `partial` as designed | Zain Jamshaid | Open — materialised once | M: demo must use a token or replay |
-| R-02 | LLM output non-deterministic, flaky tests and replay | H→M | M | M | Tests use deterministic providers (`FakeLLMProvider`, `RuleBasedClaimProvider`) (done); replay reuses the claims stored with the run instead of calling the LLM again (done); prompt-hash cache for re-runs at M3 | Replay identical in all replay tests and against PostgreSQL; `test_replay_reuses_the_stored_claims_instead_of_asking_the_llm_again`. The real `ClaudeClaimProvider` is now used when an API key is set, so two fresh runs of one resume may extract different claims | Rabbin Batool | Open | M for re-runs; L for replay |
+| R-02 | LLM output non-deterministic, flaky tests and replay | H→M | M | M | Tests use the deterministic `RuleBasedClaimProvider` (done); replay reuses the claims stored with the run instead of calling the LLM again (done); prompt-hash cache for re-runs at M3 | Replay identical in all replay tests and against PostgreSQL; `test_replay_reuses_the_stored_claims_instead_of_asking_the_llm_again`. The real `ClaudeClaimProvider` is now used when an API key is set, so two fresh runs of one resume may extract different claims | Rabbin Batool | Open | M for re-runs; L for replay |
 | R-03 | Identity resolution links different people | M | H | H | Refuse-to-link threshold (done, BVA-tested); rationale stored (done); weakest-link cap on one-hop links (INS-09); labelled corpus at M3 | Stranger test shows unlinked evidence excluded; INS-09 design question still open | Ilsa Maryam | Open | M until corpus precision measured |
 | R-04 | Concurrent writes cause duplicates or races | M | M | M | Deterministic ids + unique keys + `ON CONFLICT DO NOTHING` (done); limiter shared across runs (INS-01) | Idempotent-freeze unit and integration tests; INS-10 race found by inspection | Zain Jamshaid | Open (INS-10) | L–M |
 | R-05 | Scope creep | M | H | H | Requirement list as contract; `scope-change` label | No new requirements added at M2; deviations documented in SE423 report | Rabbin Batool | Open | L |
