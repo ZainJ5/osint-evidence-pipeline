@@ -701,7 +701,7 @@ The SCM procedures are described in full in `docs/milestone2/scm.md`. They are s
 | Origin | `blackbox`, `static-analysis`, `inspection` |
 
 Defects are tracked as GitHub issues with these labels: the inspection findings INS-01..12 and the black-box defects
-BB-DEF-01..04 each have an issue, closed by the pull request that fixed it or left open with its M3 owner.
+BB-DEF-01..04 each have an issue, closed once fixed or left open with its M3 owner.
 
 ### 7.3 Module ownership
 
