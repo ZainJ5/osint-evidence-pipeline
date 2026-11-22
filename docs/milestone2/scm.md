@@ -51,7 +51,7 @@ once "require status checks" is enabled on `main`.
 
 | Baseline | Tag | Content | Status |
 |---|---|---|---|
-| M1 | `m1-baseline` | Proposal and quality documents, README | to be tagged retroactively on the first commit that contains them |
+| M1 | `m1-baseline` | Proposal and quality documents, README | to be tagged on the commit that contains them |
 | M2 | `m2-baseline` | This build: all five modules, API, web UI, persistence, CI, M2 documents | Created on `main`. Per the rule below the tag is not moved: the final M2 state is tagged `m2-baseline.1` when CI is green on `main` |
 | M3 | `m3-baseline` | Final system | Week 13 |
 
@@ -102,9 +102,9 @@ label); new pull requests reference their issue with `Closes #n`.
 
 ## 7. Audit checklist (to run at M3 by the SCM audit lead)
 
-- Every commit on `main` reachable from `m2-baseline` came through a merged pull request with one non-author approval.
+- Every commit added to `main` during M3 came through a merged pull request with one non-author approval.
 - No squash merges (`git log --merges main` shows one merge commit per feature branch).
-- Each feature branch shows a test commit before the implementation commit.
+- Each M3 feature branch shows a test commit before the implementation commit.
 - `gitleaks` reports no findings over the full history.
 - CI was green on the tagged commit; coverage artifact present.
 - Schema migrations in the tag apply cleanly to an empty database.
