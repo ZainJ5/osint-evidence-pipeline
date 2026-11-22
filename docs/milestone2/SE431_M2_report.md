@@ -106,7 +106,7 @@ Severity per SQAP §8. Full root cause / corrective / preventive / verification 
 | INS-08 / WB-DEF-01 | Inspection, white-box | Low | NaN/inf scoring weights accepted | Finite check | Closed |
 | INS-09 | Inspection | Low | Hop link more confident than its intermediate link | Weakest-link cap | Closed (design question for the meeting) |
 | INS-10 | Inspection | Low | Delete vs. freeze race on shared blobs | — | Open, deferred to M3 (Rabbin Batool) |
-| INS-11 | Inspection | Low | `HttpAdapter` client never closed | `PipelineRun.aclose()` closes the HTTP client; the FastAPI lifespan calls it at shutdown (`api.py:130`); `test_http_adapter.py` | Closed |
+| INS-11 | Inspection | Low | `HttpAdapter` client never closed | `PipelineRun.aclose()` closes the HTTP client; the FastAPI lifespan calls it at shutdown (`api.py:130`); verified by review, shutdown test planned (V-10) | Closed |
 | INS-12 | Inspection | Low (test) | Stress test bypassed the orchestrator | Covered by INS-01 test | Closed |
 | BB-DEF-01 | Black-box | Medium | `RunConfig` accepted non-integer counts | `_check_int` | Closed |
 | BB-DEF-02 | Black-box | Medium | `min_interval_seconds=NaN` disabled rate limiting | `_check_number` (finite) | Closed |
