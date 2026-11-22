@@ -53,7 +53,7 @@ pytest -q -m integration                               # needs the containers an
 If `DATABASE_URL` is not set, the composition root (`pipeline/interface/composition.py` `build_pipeline`) wires
 in-memory storage, so the API also runs without Docker for a local demo. The claim provider is chosen in
 `build_claim_provider()`: `ClaudeClaimProvider` (Anthropic SDK, structured output) when `ANTHROPIC_API_KEY` is set,
-otherwise the deterministic `RuleBasedClaimProvider`. `FakeLLMProvider` is used by the tests. `HashingEmbedder` is
+otherwise the deterministic `RuleBasedClaimProvider`, which the tests also use. `HashingEmbedder` is
 used in both storage configurations at M2.
 
 Endpoints (`pipeline/interface/api.py`, 10 in total):
@@ -94,7 +94,7 @@ pipeline/
     http.py                  # HttpAdapter (httpx)
     postgres.py              # Database, PostgresRepository, PostgresEraser (psycopg 3)
     minio_store.py           # MinioBlobStore (minio SDK)
-    fakes.py                 # in-memory fake for every port + FakeLLMProvider, HashingEmbedder
+    fakes.py                 # in-memory fake for every port + HashingEmbedder
     claude_llm.py            # ClaudeClaimProvider: LLMProvider over the Anthropic SDK
     rule_claims.py           # RuleBasedClaimProvider: deterministic LLMProvider, no model needed
     resume_reader.py         # text of an uploaded resume (.pdf via pypdf, .docx via python-docx, .txt, .md)
@@ -163,7 +163,7 @@ flowchart LR
 | D1 | `HttpClient` exposes `get()` only (ISP) | `HttpClient` also has `post(url, json)` | `pipeline/core/ports.py` `HttpClient`; used by `pipeline/core/collection/leetcode.py` | LeetCode has no public REST profile API. Its public endpoint is GraphQL over POST. `post()` is documented as used only for that. This widens the port, which is a deliberate ISP trade-off. |
 | D2 | GitHub commit metadata by `git clone` | REST endpoint `GET /repos/{owner}/{repo}/commits?author={handle}` | `GitHubCollector._commits` | Same authorship data, no disk I/O, and all collection stays inside the official API (NFR-08). An empty repo answers HTTP 409, which is skipped. |
 | D3 | Snapshots `UNIQUE (source, sha256)` | `UNIQUE (run_id, endpoint, sha256)`. The blob key `snapshots/{source}/{sha256}` is content-addressed, so identical bytes are stored once. | `migrations/001_initial.sql`; `SnapshotStore.freeze` | Each run needs its own metadata rows for replay and audit (QR-15). Two endpoints can return identical bytes (for example two empty `[]` commit lists), so the endpoint is part of the key. Deduplication moved to the blob layer. `PostgresEraser` deletes only blobs that no other candidate references. |
-| D4 | LLM-assisted extraction | Source parsers are deterministic code. The `LLMProvider` port is used only for resume claim extraction (`ClaimExtractor`). Three providers implement it: `ClaudeClaimProvider` (real LLM, used when `ANTHROPIC_API_KEY` is set), `RuleBasedClaimProvider` (deterministic default) and `FakeLLMProvider` (tests). | `pipeline/core/snapshot/parsers.py`; `pipeline/core/scoring/claims.py`; `pipeline/adapters/{claude_llm,rule_claims,fakes}.py`; `composition.py` `build_claim_provider` | API JSON is structured, so parsing it with an LLM adds cost and non-determinism. The M1 plan deferred a real LLM to M3; it was brought forward because the web UI needs claim extraction from free-form resumes. Replay stays exact (NFR-07) because replay reuses the claims stored with the run instead of calling the provider again. |
+| D4 | LLM-assisted extraction | Source parsers are deterministic code. The `LLMProvider` port is used only for resume claim extraction (`ClaimExtractor`). Two providers implement it: `ClaudeClaimProvider` (real LLM, used when `ANTHROPIC_API_KEY` is set) and `RuleBasedClaimProvider` (deterministic default, also used by the tests). The earlier pattern-matching `FakeLLMProvider` was removed. | `pipeline/core/snapshot/parsers.py`; `pipeline/core/scoring/claims.py`; `pipeline/adapters/{claude_llm,rule_claims}.py`; `composition.py` `build_claim_provider` | API JSON is structured, so parsing it with an LLM adds cost and non-determinism. The M1 plan deferred a real LLM to M3; it was brought forward because the web UI needs claim extraction from free-form resumes. Replay stays exact (NFR-07) because replay reuses the claims stored with the run instead of calling the provider again. |
 | D5 | pgvector index and a local sentence-embedding model | `InMemoryVectorIndex` (cosine) plus `HashingEmbedder` (384-dimension hashed bag of words) | `pipeline/core/matching/vector_index.py`; `pipeline/adapters/fakes.py` | Keeps M2 runnable offline and deterministic. The matcher depends only on the `Embedder` port. pgvector and a real model are deferred to M3. The migration header says so. |
 | D6 | All tables append-only | `runs` is the only mutable table (status `running` → `done` / `partial` / `failed`). Every other table is insert-only (`ON CONFLICT DO NOTHING`). | `Table(upsert=True)` only for `runs` in `pipeline/adapters/postgres.py`; `migrations/001_initial.sql` | A run's status has to change. Every other result is a fact with a deterministic id. Checked by `tests/unit/adapters/test_postgres_rows.py::test_runs_are_the_only_upserted_table`. |
 | D7 | Erasure not detailed at model level | Every result model carries `candidate_id` (`RunRecord`, `Snapshot`, `EvidenceNode`, `AccountLink`, `Claim`, `Verdict`, `ScoreReport`). All tables reference `candidates` with `ON DELETE CASCADE`. | `pipeline/core/models.py`; `migrations/001_initial.sql` | One `DELETE FROM candidates` erases everything (FR-16). The in-memory eraser filters on the same field. |
@@ -766,7 +766,6 @@ https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 (734 
 | Repository LSP gap (in-memory overwrite vs PostgreSQL `DO NOTHING`) | Shared repository contract test run against both implementations |
 | **Code smell S1:** `PipelineRun._repository_for` chooses a repository by `type(item).__name__` string (a hidden type switch) | Replace with an explicit mapping keyed by type, or persist each list through its named repository |
 | **Code smell S2:** `PipelineRun.__init__` constructs `SkillNormalizer`, `IdentityResolver`, rules and extractor itself (partial DIP; long constructor) | Move construction into the composition root or a `PipelineComponents` builder, and inject the result |
-| **Code smell S3:** `FakeLLMProvider.complete` is a conditional chain on pattern kind, with two near-duplicate rating branches | One small handler function per pattern in a table (the Strategy pattern again) |
 | Live demo | Scripted demo: `docker compose up`, migrate, `uvicorn`, `POST /runs` for a real public profile, show report, replay (both flags true), `DELETE` the candidate |
 
 ## 9. AI usage disclosure
