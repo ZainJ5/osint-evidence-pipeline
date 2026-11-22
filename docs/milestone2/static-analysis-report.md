@@ -286,6 +286,6 @@ This result was the same on three consecutive runs.
 |---|---|---|
 | R-1 | Add docstrings to the abstract methods in `pipeline/core/ports.py` that state each method's contract and the errors it raises. This is the useful part of the 50 suppressed `missing-function-docstring` hits. | M3 |
 | R-2 | Pylint is not run on `tests/`; only Ruff checks them. Accepted for now: test code is checked by Ruff (E, F, B, SIM), and Pylint conventions such as docstrings and redefined pytest fixtures produce mostly noise there. | Review in M3 |
-| R-3 | `CandidateInput.__post_init__` (V(G) = 7) and `RunConfig.__post_init__` (V(G) = 6) are the most complex core functions and have no basis-path tests, only black-box and unit tests. They are candidates for the M3 white-box set. | M3 |
+| R-3 | `CandidateInput.__post_init__` (V(G) = 7) is the most complex core function and has no basis-path tests, only black-box and unit tests. It is a candidate for the M3 white-box set. | M3 |
 | R-4 | CAPA-SA-4 (pre-commit hook) and CAPA-SA-5 (narrower thresholds instead of global disables). | M3 |
 | R-5 | `ruff check` in CI runs over `.`, but the local commands in this report use `pipeline tests`. Both returned 0 findings in the after-run (`static-analysis-after/ruff.txt`). | – |
