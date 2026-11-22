@@ -51,8 +51,8 @@ once "require status checks" is enabled on `main`.
 
 | Baseline | Tag | Content | Status |
 |---|---|---|---|
-| M1 | `m1-baseline` | Proposal and quality documents, README | to be tagged retroactively on the first commit that contains them |
-| M2 | `m2-baseline` | This build: all five modules, API, persistence, CI, M2 documents | **to be created at submission** |
+| M1 | `m1-baseline` | Proposal and quality documents, README | to be tagged on the commit that contains them |
+| M2 | `m2-baseline` | This build: all five modules, API, web UI, persistence, CI, M2 documents | Created on `main`. Per the rule below the tag is not moved: the final M2 state is tagged `m2-baseline.1` when CI is green on `main` |
 | M3 | `m3-baseline` | Final system | Week 13 |
 
 A baseline is an annotated tag on `main` created by the milestone Integrator after CI is green:
@@ -73,10 +73,15 @@ Settings → Branches → Add rule for `main`:
 
 Evidence to capture: a screenshot of the rule, plus `gh api repos/ZainJ5/osint-evidence-pipeline/branches/main/protection`.
 
-## 6. Commit plan before submission (makes TDD and ownership visible)
+**Status:** applied to `main` (required review, CODEOWNERS review, required `test` check, no force push or
+deletion; squash and rebase merging disabled in the repository settings).
 
-Each owner commits **their own** files from their own GitHub account, on their own branch, in test-first order.
-Suggested sequence (one pull request per branch, merged in this order because later modules depend on earlier ones):
+## 6. Commit plan (as used for M2)
+
+Each owner commits **their own** files from their own GitHub account, on their own branch. The M2 work was merged
+through one `feature/m2-*` branch per module, with tests and implementation committed separately; from M3 every
+branch starts with the failing-test commit.
+Sequence used (one pull request per branch, merged in dependency order):
 
 | Order | Branch | Author | Commits (in order) |
 |---|---|---|---|
@@ -92,14 +97,14 @@ Suggested sequence (one pull request per branch, merged in this order because la
 
 Then tag `m2-baseline` (section 4) and record the CI run URL of the tagged commit in the SE431 report.
 
-Create GitHub issues for each row (labels `module:Mx`, `milestone:M2`) and the inspection defects (label `defect`,
-severity label) before opening the pull requests, and reference them with `Closes #n`.
+GitHub issues exist for the inspection and black-box defects (label `defect`, a severity label and an origin
+label); new pull requests reference their issue with `Closes #n`.
 
 ## 7. Audit checklist (to run at M3 by the SCM audit lead)
 
-- Every commit on `main` reachable from `m2-baseline` came through a merged pull request with one non-author approval.
+- Every commit added to `main` during M3 came through a merged pull request with one non-author approval.
 - No squash merges (`git log --merges main` shows one merge commit per feature branch).
-- Each feature branch shows a test commit before the implementation commit.
+- Each M3 feature branch shows a test commit before the implementation commit.
 - `gitleaks` reports no findings over the full history.
 - CI was green on the tagged commit; coverage artifact present.
 - Schema migrations in the tag apply cleanly to an empty database.
