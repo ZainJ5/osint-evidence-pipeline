@@ -42,7 +42,7 @@ class Collector(ABC):
     ) -> tuple[RawFetch, object]:
         """One logical request, retried on transient failures. Returns the raw fetch and the parsed JSON."""
         context = {"source": self.source_name, "endpoint": endpoint, "url": url}
-        error = None
+        error = CollectionError("no request was attempted", code="NO_ATTEMPT", context=context)
         for attempt in range(self._config.max_retries + 1):
             if attempt:
                 await self._sleep(BACKOFF_BASE * 2 ** (attempt - 1))

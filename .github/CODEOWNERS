@@ -1,0 +1,45 @@
+# Code owners: GitHub requests a review from the owner of every path a pull request touches.
+# Ownership follows the module split in README.md and SE423 M2 report §8.3.
+
+# Default: whole team
+*                                   @ZainJ5 @RabbinBatool210 @ilsamaryamkhan
+
+# M1 Source Collection, M4 Semantic Matching, shared contracts
+/pipeline/core/collection/          @ZainJ5
+/pipeline/core/matching/            @ZainJ5
+/pipeline/core/errors.py            @ZainJ5
+/pipeline/core/ports.py             @ZainJ5
+/pipeline/core/models.py            @ZainJ5
+/pipeline/core/inputs.py            @ZainJ5
+/pipeline/core/intake.py            @ZainJ5
+/pipeline/core/skills.py            @ZainJ5
+/tests/unit/collection/             @ZainJ5
+/tests/unit/matching/               @ZainJ5
+/tests/stress/                      @ZainJ5
+
+# M2 Snapshot Store & Evidence Extraction, interface, persistence, CI
+/pipeline/core/snapshot/            @RabbinBatool210
+/pipeline/core/pipeline.py          @RabbinBatool210
+/pipeline/core/queries.py           @RabbinBatool210
+/pipeline/adapters/                 @RabbinBatool210
+/pipeline/interface/                @RabbinBatool210
+/migrations/                        @RabbinBatool210
+/docker-compose.yml                 @RabbinBatool210
+/pyproject.toml                     @RabbinBatool210
+/.github/                           @RabbinBatool210 @ZainJ5
+/tests/unit/snapshot/               @RabbinBatool210
+/tests/unit/adapters/               @RabbinBatool210
+/tests/system/                      @RabbinBatool210
+/tests/integration/                 @RabbinBatool210
+/tests/blackbox/                    @RabbinBatool210
+
+# M3 Identity Resolution, M5 Claim Verification & Scoring, web UI
+/pipeline/core/identity/            @ilsamaryamkhan
+/pipeline/core/scoring/             @ilsamaryamkhan
+/tests/unit/identity/               @ilsamaryamkhan
+/tests/unit/scoring/                @ilsamaryamkhan
+/tests/whitebox/                    @ilsamaryamkhan
+/ui/                                @ilsamaryamkhan
+
+# Quality documents: reviewed by the whole team
+/docs/                              @ZainJ5 @RabbinBatool210 @ilsamaryamkhan
