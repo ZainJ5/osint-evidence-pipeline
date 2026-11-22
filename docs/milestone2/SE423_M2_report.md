@@ -30,12 +30,13 @@ The build goes further than that skeleton. All five modules and the REST API are
 | Skill normalisation and requirement coverage | FR-10 | `pipeline/core/matching/` | `tests/unit/matching/` |
 | Claim extraction, verification and 0–100 score report | FR-11..FR-13 | `pipeline/core/scoring/` | `tests/unit/scoring/` |
 | Replay from stored snapshots without network | FR-14, NFR-07 | `PipelineRun.replay` | `test_replay_reproduces_evidence_and_score_without_network` |
-| REST API: run, replay, report, delete | FR-15, QR-16 | `pipeline/interface/api.py` | `tests/system/test_api.py` |
+| REST API: run, replay, report, delete, plus the read endpoints used by the web UI | FR-15, QR-16 | `pipeline/interface/api.py` | `tests/system/test_api.py` |
+| Web UI: resume upload, run progress, collected evidence, claim verdicts and score | FR-15 | `ui/` (Next.js) over the REST API; `pipeline/core/{intake,queries}.py` | `npm run lint`, `npm run build`; API side in `tests/system/` |
 | Delete all data of a candidate, blobs included | FR-16 | `PostgresEraser`, `InMemoryEraser` | `test_eraser_removes_every_candidate_row_and_unshared_blobs` |
 
 The full stack also runs on real storage. `tests/integration/test_pipeline_postgres.py::test_full_run_persists_replays_and_deletes_on_real_storage`
-executes a run, replays it and deletes the candidate against PostgreSQL 16 and MinIO containers. It passed locally;
-see §6.1.
+executes a run, replays it and deletes the candidate against PostgreSQL 16 and MinIO containers. It passes in CI
+(GitHub Actions run 45028442893, PostgreSQL 16 service and MinIO container); see §6.1.
 
 ### 1.2 How to run it
 
@@ -50,11 +51,25 @@ pytest -q -m integration                               # needs the containers an
 ```
 
 If `DATABASE_URL` is not set, the composition root (`pipeline/interface/composition.py` `build_pipeline`) wires
-in-memory storage, so the API also runs without Docker for a local demo. The deterministic `FakeLLMProvider` and
-`HashingEmbedder` are used in both configurations at M2.
+in-memory storage, so the API also runs without Docker for a local demo. The claim provider is chosen in
+`build_claim_provider()`: `ClaudeClaimProvider` (Anthropic SDK, structured output) when `ANTHROPIC_API_KEY` is set,
+otherwise the deterministic `RuleBasedClaimProvider`. `FakeLLMProvider` is used by the tests. `HashingEmbedder` is
+used in both storage configurations at M2.
 
-Endpoints (`pipeline/interface/api.py`): `GET /health`, `POST /runs`, `POST /runs/{run_id}/replay`,
-`GET /runs/{run_id}/report`, `DELETE /candidates/{candidate_id}`.
+Endpoints (`pipeline/interface/api.py`, 10 in total):
+
+| Method and path | Purpose |
+|---|---|
+| `GET /health` | liveness and the storage backend in use |
+| `POST /resumes/parse` | read an uploaded resume (.pdf, .docx, .txt, .md) and return its text, links and handles |
+| `POST /runs` | run the whole pipeline synchronously and return the report |
+| `POST /runs/start` | start a run in the background (HTTP 202); progress is reported through `RunObserver` |
+| `GET /runs` | list runs for the dashboard |
+| `GET /runs/{run_id}` | one run with its stage progress, evidence, links, claims and verdicts |
+| `GET /snapshots/{snapshot_id}/raw` | the frozen raw bytes of one snapshot, for audit |
+| `POST /runs/{run_id}/replay` | recompute from stored snapshots, no network |
+| `GET /runs/{run_id}/report` | the stored score report |
+| `DELETE /candidates/{candidate_id}` | erase all data of a candidate (FR-16) |
 
 ### 1.3 As-built package layout
 
@@ -65,28 +80,37 @@ pipeline/
     models.py                # frozen dataclasses exchanged between modules
     inputs.py                # CandidateInput, JobRequirementInput, RunConfig (boundary validation)
     errors.py                # PipelineError hierarchy with error codes
+    intake.py                # pure helpers: links, handles, email and name guess from resume text
+    queries.py               # read side for the web UI: run progress and JSON-ready run views
+    skills.py                # curated technology vocabulary shared by M4 and M5
     log.py                   # JSON logging + email scrubbing filter
-    pipeline.py              # PipelineRun orchestrator (execute / replay / report / delete_candidate)
+    pipeline.py              # PipelineRun orchestrator (execute / replay / report / delete_candidate), RunObserver
     collection/              # M1: Collector, CollectorFactory, RateLimiter, CollectionRunner, 3 collectors
     snapshot/                # M2: SnapshotStore, EvidenceExtractor, SourceParser + 3 parsers
     identity/                # M3: MatchSignal + 4 signals, IdentityResolver, profile normalisation
-    matching/                # M4: SkillNormalizer, RequirementMatcher, InMemoryVectorIndex
-    scoring/                 # M5: ClaimExtractor, VerificationRule + 2 rules, ClaimVerifier, ScoringStrategy
+    matching/                # M4: SkillNormalizer, RequirementMatcher, InMemoryVectorIndex, evidence_search
+    scoring/                 # M5: ClaimExtractor, VerificationRule + 3 rules, ClaimVerifier, ScoringStrategy
   adapters/
     http.py                  # HttpAdapter (httpx)
     postgres.py              # Database, PostgresRepository, PostgresEraser (psycopg 3)
     minio_store.py           # MinioBlobStore (minio SDK)
     fakes.py                 # in-memory fake for every port + FakeLLMProvider, HashingEmbedder
+    claude_llm.py            # ClaudeClaimProvider: LLMProvider over the Anthropic SDK
+    rule_claims.py           # RuleBasedClaimProvider: deterministic LLMProvider, no model needed
+    resume_reader.py         # text of an uploaded resume (.pdf via pypdf, .docx via python-docx, .txt, .md)
     migrate.py               # versioned migration runner (schema_migrations table)
   interface/
     api.py                   # FastAPI app; thin endpoints
     composition.py           # composition root: the only place adapters are chosen
 migrations/001_initial.sql   # 9 tables, FK ON DELETE CASCADE from candidates
+migrations/002_ui_support.sql # columns the web UI shows (claimed solved count, match details)
+ui/                          # Next.js web UI: new-analysis wizard, dashboard, run view (calls the REST API)
 docker-compose.yml, .github/workflows/ci.yml, pyproject.toml, .env.example
 tests/{unit,system,integration,stress,blackbox,whitebox}/
 ```
 
-The code is about 3,000 lines of Python and SQL under `pipeline/` and `migrations/` (2,996 by `wc -l` at the last check).
+The code is about 4,300 lines of Python and SQL under `pipeline/` and `migrations/` (4,330 by `wc -l` on the
+`m2-baseline` code), not counting the `ui/` TypeScript.
 
 ### 1.4 As-built flow
 
@@ -139,7 +163,7 @@ flowchart LR
 | D1 | `HttpClient` exposes `get()` only (ISP) | `HttpClient` also has `post(url, json)` | `pipeline/core/ports.py` `HttpClient`; used by `pipeline/core/collection/leetcode.py` | LeetCode has no public REST profile API. Its public endpoint is GraphQL over POST. `post()` is documented as used only for that. This widens the port, which is a deliberate ISP trade-off. |
 | D2 | GitHub commit metadata by `git clone` | REST endpoint `GET /repos/{owner}/{repo}/commits?author={handle}` | `GitHubCollector._commits` | Same authorship data, no disk I/O, and all collection stays inside the official API (NFR-08). An empty repo answers HTTP 409, which is skipped. |
 | D3 | Snapshots `UNIQUE (source, sha256)` | `UNIQUE (run_id, endpoint, sha256)`. The blob key `snapshots/{source}/{sha256}` is content-addressed, so identical bytes are stored once. | `migrations/001_initial.sql`; `SnapshotStore.freeze` | Each run needs its own metadata rows for replay and audit (QR-15). Two endpoints can return identical bytes (for example two empty `[]` commit lists), so the endpoint is part of the key. Deduplication moved to the blob layer. `PostgresEraser` deletes only blobs that no other candidate references. |
-| D4 | LLM-assisted extraction | Source parsers are deterministic code. The `LLMProvider` port is used only for resume claim extraction (`ClaimExtractor`). At M2 the provider is the rule-based `FakeLLMProvider`. | `pipeline/core/snapshot/parsers.py`; `pipeline/core/scoring/claims.py`; `pipeline/adapters/fakes.py` | API JSON is structured, so parsing it with an LLM adds cost and non-determinism. A deterministic provider makes replay exact (NFR-07). A real provider plugs into the same port at M3. |
+| D4 | LLM-assisted extraction | Source parsers are deterministic code. The `LLMProvider` port is used only for resume claim extraction (`ClaimExtractor`). Three providers implement it: `ClaudeClaimProvider` (real LLM, used when `ANTHROPIC_API_KEY` is set), `RuleBasedClaimProvider` (deterministic default) and `FakeLLMProvider` (tests). | `pipeline/core/snapshot/parsers.py`; `pipeline/core/scoring/claims.py`; `pipeline/adapters/{claude_llm,rule_claims,fakes}.py`; `composition.py` `build_claim_provider` | API JSON is structured, so parsing it with an LLM adds cost and non-determinism. The M1 plan deferred a real LLM to M3; it was brought forward because the web UI needs claim extraction from free-form resumes. Replay stays exact (NFR-07) because replay reuses the claims stored with the run instead of calling the provider again. |
 | D5 | pgvector index and a local sentence-embedding model | `InMemoryVectorIndex` (cosine) plus `HashingEmbedder` (384-dimension hashed bag of words) | `pipeline/core/matching/vector_index.py`; `pipeline/adapters/fakes.py` | Keeps M2 runnable offline and deterministic. The matcher depends only on the `Embedder` port. pgvector and a real model are deferred to M3. The migration header says so. |
 | D6 | All tables append-only | `runs` is the only mutable table (status `running` → `done` / `partial` / `failed`). Every other table is insert-only (`ON CONFLICT DO NOTHING`). | `Table(upsert=True)` only for `runs` in `pipeline/adapters/postgres.py`; `migrations/001_initial.sql` | A run's status has to change. Every other result is a fact with a deterministic id. Checked by `tests/unit/adapters/test_postgres_rows.py::test_runs_are_the_only_upserted_table`. |
 | D7 | Erasure not detailed at model level | Every result model carries `candidate_id` (`RunRecord`, `Snapshot`, `EvidenceNode`, `AccountLink`, `Claim`, `Verdict`, `ScoreReport`). All tables reference `candidates` with `ON DELETE CASCADE`. | `pipeline/core/models.py`; `migrations/001_initial.sql` | One `DELETE FROM candidates` erases everything (FR-16). The in-memory eraser filters on the same field. |
@@ -148,7 +172,10 @@ flowchart LR
 | D10 | Replay re-runs the pipeline | `replay` recomputes from stored snapshots, **writes nothing**, and returns `ReplayResult(report, evidence_identical, score_identical)`. `score_identical` compares the whole `ScoreReport` (total, components, verdicts). The identity threshold is taken from the config recorded with the run. | `PipelineRun.replay`, `PipelineRun._analyse` | No network access and no side effects. The two flags turn FR-14 / NFR-07 into checks at run time, not only in tests. `RunRecord.replay_of` exists in the schema but is not used yet. |
 | D11 | Collector shape not specified | `Collector` is an abstract base class with a fixed `collect()` → `_collect()` skeleton (Template Method) | `pipeline/core/collection/collector.py` | Retry, back-off, rate limiting and JSON validation are identical for every source and are written once. This does not contradict the M1 rejection of Template Method, which was for scoring (§2.3). |
 | D12 | One shared rate limiter per source | As designed, but only after a fix during M2. The first build created a `CollectionRunner` inside every `execute()` call, so concurrent runs did not share limiters. Inspection finding INS-01 moved it to `PipelineRun.__init__`. | `PipelineRun.__init__` (`self._runner`) | See §4.3, including the remaining event-loop caveat. |
-| D13 | (not in M1) | A job id is bound to one requirement set: re-registering an id with different skills raises `ValidationError(code="JOB_CONFLICT")` (INS-02) | `PipelineRun._register_job` | Without this, a replay could score against a different job than the original run did. |
+| D13 | (not in M1) | A job id is bound to one requirement set: re-registering an id with different skills raises `ValidationError(code="JOB_CONFLICT")` (INS-02) | `PipelineRun.register_job` | Without this, a replay could score against a different job than the original run did. |
+| D14 | No user interface in M1 scope (API only) | A Next.js web UI (`ui/`) with a resume-upload wizard, dashboard and run view; seven API endpoints added for it (§1.2); migration `002_ui_support.sql` | `ui/`; `pipeline/interface/api.py`; `pipeline/core/{intake,queries,skills}.py`; `pipeline/adapters/resume_reader.py` | Makes the pipeline demonstrable to a non-technical user and shows the evidence behind each verdict (QR-03). It sits outside `pipeline/core` and uses only the public API, so the core architecture is unchanged. |
+| D15 | Observer considered optional in M1 (§7) | `RunObserver` (Observer pattern) reports stage progress of a run; the API's background runs use it to drive the UI progress timeline | `pipeline/core/pipeline.py` `RunObserver`, `_Stages` | See §2.4. |
+| D16 | Two verification rules (skill, rating) | A third rule, `SolvedClaimRule`, verifies "solved N problems" claims against achievement evidence | `pipeline/core/scoring/rules.py`; `default_rules()` | Resumes commonly claim problem counts; adding it needed no change to `ClaimVerifier` (OCP). |
 
 ---
 
@@ -271,7 +298,7 @@ new claim kinds, alternative weightings. The calling code must not change when o
 | Strategy interface | Concrete strategies | Context |
 |---|---|---|
 | `pipeline/core/identity/signals.py` `MatchSignal` | `EmailSignal`, `CrossLinkSignal`, `NameSignal`, `HandleSignal` | `identity/resolver.py` `IdentityResolver` (list of `(signal, weight)`, fused by noisy-OR) |
-| `pipeline/core/scoring/rules.py` `VerificationRule` | `SkillClaimRule`, `RatingClaimRule` | `scoring/verifier.py` `ClaimVerifier` (dispatch by `rule.kind`) |
+| `pipeline/core/scoring/rules.py` `VerificationRule` | `SkillClaimRule`, `RatingClaimRule`, `SolvedClaimRule` | `scoring/verifier.py` `ClaimVerifier` (dispatch by `rule.kind`) |
 | `pipeline/core/scoring/scoring.py` `ScoringStrategy` | `WeightedEvidenceScoring` | `scoring/scoring.py` `ScoreCalculator` |
 | (additional) `pipeline/core/snapshot/parsers.py` `SourceParser` | `GitHubParser`, `CodeforcesParser`, `LeetCodeParser` | `snapshot/extractor.py` `EvidenceExtractor` (dispatch by `snapshot.source`) |
 
@@ -304,7 +331,7 @@ return round(1.0 - miss, 4), fired
 
 **Integration.** `PipelineRun._analyse` builds `IdentityResolver(threshold=...)` with `DEFAULT_SIGNALS`, using the
 link threshold recorded in the run's config (INS-03). `PipelineRun.__init__` builds
-`ClaimVerifier([SkillClaimRule(normalizer), RatingClaimRule()])` and
+`ClaimVerifier(default_rules(normalizer))` (`SkillClaimRule`, `RatingClaimRule`, `SolvedClaimRule`) and
 `ScoreCalculator(scoring or WeightedEvidenceScoring())`. The `scoring` constructor parameter lets a caller inject a
 different strategy without touching the orchestrator.
 
@@ -327,6 +354,21 @@ pipeline (D11).
   `test_invalid_signal_configuration_raises`, `test_threshold_boundary`.
 - Rules: `tests/unit/scoring/test_verifier.py::test_each_claim_goes_to_the_rule_for_its_kind`,
   `test_unknown_claim_kind_raises`, `test_skill_rule.py`, `test_rating_rule.py`.
+
+### 2.4 Observer (behavioural) — `RunObserver`
+
+**Problem.** A run started with `POST /runs/start` executes in the background, and the web UI must show which stage
+it is in. The orchestrator must not know who is watching (a progress store, a log, a test recorder), and a broken
+watcher must never fail a run.
+
+**Implementation.** `RunObserver` is an abstract subject-to-observer interface with one method,
+`on_event(run_id, stage, status, detail)`. `PipelineRun.execute(..., observer=None)` wraps it in `_Stages`, which
+notifies `started` and `done` for each stage (collect, freeze, extract, resolve, match, verify, score). The API passes its in-memory
+progress store as the observer (`pipeline/interface/api.py`); the UI polls `GET /runs/{run_id}` to render the
+timeline. `_Stages._notify` catches any exception from the observer, logs `observer_failed` and continues (§3.5).
+
+**Tests.** `tests/system/test_pipeline_observer.py::test_observer_sees_every_stage_start_and_finish_in_order` and
+`test_a_failing_observer_never_breaks_the_run`.
 
 ---
 
@@ -414,15 +456,16 @@ There are exactly three places, all in `pipeline/adapters/`: `http.py` `HttpAdap
 
 ### 3.5 No bare `except`
 
-There is no bare `except:`. `grep -rnE "except\s*:|except Exception|except BaseException" pipeline` returns two broad
-handlers, and both re-raise:
+There is no bare `except:`. `grep -rnE "except\s*:|except Exception|except BaseException" pipeline` returns three broad
+handlers. Two re-raise; one deliberately does not:
 
 | Handler | Purpose | Test |
 |---|---|---|
 | `pipeline/core/collection/rate_limiter.py` `RateLimiter.__aenter__`: `except BaseException: self._semaphore.release(); raise` | releases the slot if the caller is cancelled while waiting | `tests/unit/collection/test_rate_limiter.py::test_slot_is_released_when_the_body_raises` |
-| `pipeline/core/pipeline.py` `PipelineRun.execute`: `except Exception` | records the run as `failed`, then `raise` (INS-04) | |
+| `pipeline/core/pipeline.py:165` `PipelineRun.execute`: `except Exception` | records the run as `failed`, then `raise` (INS-04) | `tests/system/test_inspection_m2.py::test_ins04_unexpected_error_marks_the_run_failed` |
+| `pipeline/core/pipeline.py:85` `_Stages._notify`: `except Exception` | **does not re-raise.** An observer is a progress display; if it fails, the run must still finish. The exception type is logged as `observer_failed` at WARNING. | `tests/system/test_pipeline_observer.py` (`Broken` observer) |
 
-Neither swallows the exception. Every other handler names specific exception types. Ruff (rules E, F, W, I, B, C90, UP, SIM) reports
+The third handler is the only place an exception is swallowed, it is limited to observer callbacks, and it is logged. Every other handler names specific exception types. Ruff (rules E, F, W, I, B, C90, UP, SIM) reports
 "All checks passed!".
 
 ---
@@ -432,13 +475,12 @@ Neither swallows the exception. Every other handler names specific exception typ
 ### 4.1 Concurrent operations and the strategy for each
 
 The concurrency model is `asyncio` on a single thread, so there is no data race between coroutines. Shared state is
-reduced to the per-source rate limiter and the extractor's result list. The table cites lines from the working tree
-on 2026-11-19.
+reduced to the per-source rate limiter and the extractor's result list. The table cites lines from the `m2-baseline` code.
 
 | Operation | Strategy | Code |
 |---|---|---|
 | Collect three sources for one candidate in parallel (FR-05, NFR-01) | fan-out with `asyncio.gather(*..., return_exceptions=True)`; one failing source cannot cancel the others | `pipeline/core/collection/runner.py:37` |
-| Concurrent runs | one `CollectionRunner` per `PipelineRun`, so all runs share one limiter per source (INS-01, §4.3) | `pipeline/core/pipeline.py:81` |
+| Concurrent runs | one `CollectionRunner` per `PipelineRun`, so all runs share one limiter per source (INS-01, §4.3) | `pipeline/core/pipeline.py:118` |
 | Respect source rate limits (NFR-01, QR-08) | per-source `RateLimiter`: `asyncio.Semaphore(max_concurrent)` bounds requests in flight; an `asyncio.Lock` serialises the "next start time" check so two coroutines cannot both pass the minimum gap; `while now < ready_at` re-checks after sleeping because timers can wake early | `rate_limiter.py:21-22, 33-54` |
 | Source terms | the Codeforces minimum interval is raised to 2.0 s whatever `RunConfig` says | `factory.py` `SOURCE_LIMITS`, `create_limiter` |
 | Parse snapshots (FR-07) | bounded worker pool: `extraction_workers` coroutines drain an `asyncio.Queue`; results are sorted by `(source, endpoint, locator, kind, id)`, so output does not depend on scheduling | `snapshot/extractor.py:29-35, 46-51` |
@@ -480,7 +522,7 @@ event loop of that call. The cost was that two `POST /runs` requests running at 
 limiter, so together they could exceed a source's rate.
 
 The SE431 M2 inspection recorded this as INS-01. The runner is now created once in `PipelineRun.__init__`
-(`pipeline/core/pipeline.py:81`, `self._runner`). Every run of one pipeline instance shares one limiter per source
+(`pipeline/core/pipeline.py:118`, `self._runner`). Every run of one pipeline instance shares one limiter per source
 (`CollectionRunner.limiter_for`), which is the configuration the stress test exercises.
 
 **Remaining caveat.** `RateLimiter` creates its `asyncio.Semaphore` and `asyncio.Lock` in `__init__`. In Python 3.10+
@@ -517,11 +559,11 @@ loop. Recreating limiters per loop (a registry keyed by the running loop) is lis
   - name: Dependency direction (QR-09: core must not import adapters or interface)
     run: '! grep -rnE "from pipeline\.(adapters|interface)|import pipeline\.(adapters|interface)" pipeline/core'
   ```
-  Run locally on 2026-11-19, it found no matches (grep exit 1), so the CI step passes.
+  Run locally and in CI, it found no matches (grep exit 1), so the CI step passes.
 - **Complexity.** Ruff `C90` with `max-complexity = 10` (`pyproject.toml`) is part of `ruff check .`. It reports
   "All checks passed!", so no function exceeds complexity 10 (QR-11).
-- **Static analysis results (local, 2026-11-19).** `ruff check .` → All checks passed. `ruff format --check .` →
-  all files formatted (105 at the last check, this report included, because Ruff also formats Python blocks in Markdown). `pylint pipeline --fail-under=9` → **10.00/10**. Before and after records are in
+- **Static analysis results (local and in CI).** `ruff check .` → All checks passed. `ruff format --check .` →
+  127 files already formatted (this report included, because Ruff also formats Python blocks in Markdown). `pylint pipeline --fail-under=9` → **10.00/10**. Before and after records are in
   `docs/records/m2/static-analysis-before/` and `docs/records/m2/static-analysis-after/`.
 
 ---
@@ -530,17 +572,20 @@ loop. Recreating limiters per loop (a registry keyed by the running loop) is lis
 
 ### 6.1 Test counts and coverage (measured)
 
-Commands run on 2026-11-19 on Windows 11, Python 3.10.0, from the project `.venv`:
+Commands run on the `m2-baseline` code, locally (Windows 11, Python 3.10) and in GitHub Actions (Ubuntu, Python 3.12):
 
 ```
 .venv/Scripts/python -m pytest -q -m "not integration" --cov=pipeline/core --cov-report=term
-  → 557 passed, 10 deselected                 TOTAL 1282 stmts, 14 missed, 99%
+  → 723 passed, 11 deselected                 TOTAL 1642 stmts, 22 missed, 99%
 
 set -a; . ./.env.example; set +a; .venv/Scripts/python -m pytest -q -m integration
-  → 10 passed, 557 deselected
+  → 11 passed, 723 deselected
 
 set -a; . ./.env.example; set +a; .venv/Scripts/python -m pytest -q --cov=pipeline/core --cov-branch --cov-report=term
-  → 567 passed                                  TOTAL 1282 stmts, 14 missed, 302 branches, 7 partial, 98.67%
+  → 734 passed                                  TOTAL 1642 stmts, 22 missed, 380 branches, 12 partial, 98%
+
+GitHub Actions (all gates, integration tests included), run 45028442893:
+  → 734 passed in 34.68s                        TOTAL 1642 stmts, 22 missed, 99%
 ```
 
 The integration tests ran against real **PostgreSQL 16** (`postgres:16`) and **MinIO**
@@ -548,31 +593,30 @@ The integration tests ran against real **PostgreSQL 16** (`postgres:16`) and **M
 `python -m pipeline.adapters.migrate`. Black-box defects BB-DEF-01..04 (§3.1) were fixed after test design, so
 their former strict-xfail tests now pass. Full output: `docs/records/m2/coverage-full.txt`.
 
-Line coverage of `pipeline/core` is **99 %** (1,282 statements, 14 missed; branch coverage 295/302), well above the 60 % gate (NFR-04,
-QR-10). Every core module is at or above 93 %; `collection/rate_limiter.py` is the lowest. Across the coverage runs
+Line coverage of `pipeline/core` is **99 %** (1,642 statements, 22 missed; 380 branches, 12 partial), well above the
+60 % gate (NFR-04, QR-10). Every core module is at or above 91 %; `queries.py` (the web UI read side) is the lowest. Across the coverage runs
 made while writing this report (between 98 % and 99 % as the code changed), one run reported 84 %. That run
 coincided with other processes writing the shared `.coverage` file, and it did not reproduce.
 
-Tests collected: **567** (`pytest --collect-only`; parametrised cases counted individually).
+Tests collected: **734** (`pytest --collect-only`; parametrised cases counted individually).
 
 | Directory | Tests | What it covers |
 |---|---:|---|
-| `tests/unit/collection/` | 126 | input boundaries, factory and OCP stub, LSP contract, retry policy, rate limiter, runner, three collectors |
+| `tests/unit/collection/` | 131 | input boundaries, factory and OCP stub, LSP contract, retry policy, rate limiter, runner, three collectors |
 | `tests/unit/identity/` | 71 | four signals, profile normalisation, resolver (threshold boundary, noisy-OR, one-hop links), inspection regression |
-| `tests/unit/matching/` | 67 | alias and compiler-name normalisation, vector index, requirement matcher |
-| `tests/unit/scoring/` | 52 | claim extraction, skill and rating rules, verifier, scoring strategy |
-| `tests/unit/snapshot/` | 28 | freeze, hash verification and tampering, extractor determinism, parsers |
-| `tests/unit/adapters/` | 13 | `HttpAdapter` with `httpx.MockTransport`, PostgreSQL row mapping |
-| `tests/unit/core/` | 4 | JSON logging and email scrubbing |
-| `tests/system/` | 17 | whole pipeline on in-memory adapters and recorded fixtures (`tests/fixtures/`), REST API, OpenAPI schema |
+| `tests/unit/matching/` | 73 | alias and compiler-name normalisation, vector index, requirement matcher, evidence search |
+| `tests/unit/scoring/` | 93 | claim extraction, skill, rating and solved rules, verifier, scoring strategy |
+| `tests/unit/snapshot/` | 35 | freeze, hash verification and tampering, extractor determinism, parsers |
+| `tests/unit/adapters/` | 94 | `HttpAdapter` with `httpx.MockTransport`, PostgreSQL row mapping, resume reader, rule-based and Claude claim providers |
+| `tests/unit/core/` | 12 | JSON logging and email scrubbing, resume intake helpers |
+| `tests/system/` | 35 | whole pipeline on in-memory adapters and recorded fixtures (`tests/fixtures/`), REST API incl. UI endpoints, observer, OpenAPI schema |
 | `tests/stress/` | 1 | 20-candidate concurrency (§4.2) |
-| `tests/integration/` | 10 | PostgreSQL and MinIO round trips, idempotent freeze, FK error translation, eraser, full run on real storage |
+| `tests/integration/` | 11 | PostgreSQL and MinIO round trips, idempotent freeze, FK error translation, eraser, full run on real storage |
 | `tests/blackbox/` | 144 | SE431 black-box suite (equivalence classes and boundary values) |
 | `tests/whitebox/` | 34 | SE431 white-box basis-path tests |
-| **Total** | **567** | |
+| **Total** | **734** | |
 
-Counts regenerated after all M2 fixes on 2026-11-19. Regenerate with the same commands if code changes before
-submission.
+Counts regenerated on the `m2-baseline` code. Regenerate with the same commands if code changes before submission.
 
 ### 6.2 TDD process
 
@@ -585,31 +629,38 @@ written until they passed. Examples visible in the test design:
   written before any real timing code;
 - the `StubCollector` OCP test was written against the factory interface.
 
-`docs/ai-usage-log.md` records this for each module. **The red-green-refactor sequence is not yet visible in Git,
-because the repository has no commits.** This report does not claim otherwise. §6.3 explains how to make the history
-visible.
+`docs/ai-usage-log.md` records how AI assistance was used for each module.
 
-### 6.3 Commit plan to make the red-green-refactor history visible
+**What the Git history does and does not show.** The M2 work is on `main` through one feature branch per module
+(`feature/m2-*`), merged by pull request. On each branch the tests and the implementation are separate commits, but
+the implementation commit comes **before** the "Added tests for …" commit, and there are no separate refactor
+commits. The red → green → refactor order is therefore **not** visible in Git for M2, and this report does not claim
+that it is. From M3 the team commits the failing test first on every branch (§6.3), which the SCM audit checks
+(`docs/milestone2/scm.md` §7).
 
-**To be done by the team before submission.** Each member commits their own modules from their own Git identity.
+### 6.3 Commit discipline from M3 onwards
 
-1. Make the initial commit on `main`: `pyproject.toml`, `.gitignore`, `.env.example`, `docker-compose.yml`,
-   `docs/requirements.md` (Rabbin). Tag the M1 documents as `m1-baseline` (see `docs/milestone2/scm.md` §4).
-2. Make a shared-contracts commit on `feature/m2-contracts`: `pipeline/core/{errors,ports,models,inputs,log}.py`,
-   `pipeline/adapters/fakes.py` and their tests (`tests/unit/core/`, `tests/unit/collection/test_candidate_input.py`),
-   in test → implementation order. Merge it first, because every module depends on it.
-3. Use one branch per module, created from `main` after step 2:
+The M2 work reached `main` through these branches, each merged with a merge commit (`git log --merges main`).
+The M2 history is not rewritten; the ordering rules in step 4 apply to all work from M3.
 
-   | Branch | Owner | Files |
-   |---|---|---|
-   | `feature/m2-collection` | Zain | `pipeline/core/collection/`, `tests/unit/collection/`, `tests/stress/` |
-   | `feature/m2-snapshot` | Rabbin | `pipeline/core/snapshot/`, `tests/unit/snapshot/` |
-   | `feature/m2-identity` | Ilsa | `pipeline/core/identity/`, `tests/unit/identity/` |
-   | `feature/m2-matching` | Zain | `pipeline/core/matching/`, `tests/unit/matching/` |
-   | `feature/m2-scoring` | Ilsa | `pipeline/core/scoring/`, `tests/unit/scoring/` |
-   | `feature/m2-persistence` | Rabbin | `pipeline/adapters/{http,postgres,minio_store,migrate}.py`, `migrations/`, `tests/unit/adapters/`, `tests/integration/` |
-   | `feature/m2-integration` | Ilsa | `pipeline/core/pipeline.py`, `tests/system/test_pipeline_system.py`, `tests/fixtures/` |
-   | `feature/m2-api-ci` | Rabbin | `pipeline/interface/`, `tests/system/test_api.py`, `.github/workflows/ci.yml` |
+| Branch | Committed by | Branch | Committed by |
+|---|---|---|---|
+| `feature/m2-core-shared` | Zain Jamshaid | `feature/m2-rest-api` | Rabbin Batool |
+| `feature/m2-candidate-intake` | Zain Jamshaid | `feature/m2-web-ui` | Ilsa Maryam |
+| `feature/m2-source-collection` | Zain Jamshaid | `feature/m2-blackbox-tests` | Rabbin Batool |
+| `feature/m2-http-adapter` | Rabbin Batool | `feature/m2-whitebox-tests` | Ilsa Maryam |
+| `feature/m2-snapshot-store` | Rabbin Batool | `feature/m2-inspection` | Zain Jamshaid |
+| `feature/m2-identity-resolution` | Ilsa Maryam | `feature/m2-static-analysis` | Rabbin Batool |
+| `feature/m2-semantic-matching` | Zain Jamshaid | `feature/m2-vv-plan` | Ilsa Maryam |
+| `feature/m2-claim-scoring` | Ilsa Maryam | `feature/m2-scm` | Zain Jamshaid |
+| `feature/m2-pipeline-replay` | Rabbin Batool | `feature/m2-reports` | Zain Jamshaid |
+| `feature/m2-postgres-persistence` | Rabbin Batool | | |
+
+Rules for every branch from M3:
+
+1. One branch per feature or fix: `feature/m3-<topic>`, `fix/m3-<topic>`, `docs/m3-<topic>`.
+2. A shared-contract change (`ports.py`, `models.py`, `errors.py`) is its own branch, merged first.
+3. Open an issue for the work before the branch, and reference it from the pull request.
 
 4. On each branch, commit **per class** in three steps:
    1. `Added failing tests for <Class>`: only the test file. Run `pytest` and keep the failing output for the PR
@@ -618,10 +669,10 @@ visible.
    3. `Refactored <Class>: <what>`: only when a refactoring was made, such as an extracted helper or a renamed field.
 5. Open a PR per branch with the linked issue, CI green, and one approval from a member who is not the author. Merge
    with **merge commits; no squash and no rebase**, so the test → implementation → refactor commits stay on `main`.
-6. After all merges, `main` must reproduce the numbers in §6.1. Then tag `m2-baseline`.
+6. After all merges, `main` must reproduce the reported numbers. Then tag the milestone baseline (`m3-baseline`).
 
-Do not back-date commits and do not rewrite them to look older. The history will show when the code was committed.
-The evidence of test-first work is the order of commits within each branch.
+Commits are never back-dated or rewritten. The evidence of test-first work is the order of commits within each
+branch.
 
 ---
 
@@ -631,8 +682,8 @@ The SCM procedures are described in full in `docs/milestone2/scm.md`. They are s
 
 ### 7.1 Branch strategy and PR rules
 
-- `main` is protected and is changed only through pull requests (**branch protection: to be done by the team before
-  submission**).
+- `main` is protected and is changed only through pull requests (branch protection rule on `main`: one approving
+  review, CODEOWNERS review, the CI `test` check, no force pushes or deletion).
 - Use feature branches `feature/m2-<module>` (§6.3). For M3: `feature/m3-<topic>`, `fix/<issue-id>-<topic>`.
 - Every PR needs:
   - a linked issue;
@@ -643,7 +694,7 @@ The SCM procedures are described in full in `docs/milestone2/scm.md`. They are s
 - A PR that touches the shared contracts (`ports.py`, `models.py`, `errors.py`) needs approval from both other
   members, because it changes the interfaces of all modules.
 
-### 7.2 Issue labels (to be created by the team before submission)
+### 7.2 Issue labels
 
 | Group | Labels |
 |---|---|
@@ -652,7 +703,8 @@ The SCM procedures are described in full in `docs/milestone2/scm.md`. They are s
 | Severity (defects) | `critical`, `high`, `medium`, `low` (QR-06: no open critical or high defect at submission) |
 | Origin | `blackbox`, `static-analysis`, `inspection` |
 
-BB-DEF-01..04 should be opened as `bug` + `blackbox` issues.
+Defects are tracked as GitHub issues with these labels: the inspection findings INS-01..12 and the black-box defects
+BB-DEF-01..04 each have an issue, closed by the pull request that fixed it or left open with its M3 owner.
 
 ### 7.3 Module ownership
 
@@ -668,15 +720,16 @@ BB-DEF-01..04 should be opened as `bug` + `blackbox` issues.
 | `migrations/`, `docker-compose.yml`, `.github/workflows/ci.yml`, `pyproject.toml`, `.env.example` | Rabbin Batool | persistence and CI |
 | `pipeline/core/identity/` | Ilsa Maryam | M3 |
 | `pipeline/core/scoring/` | Ilsa Maryam | M5 |
-| `pipeline/core/pipeline.py` | Ilsa Maryam | M2 integrator |
-| `pipeline/core/{ports,models,errors}.py` | Ilsa Maryam (integrator) | shared contract; changes need approval from all three members |
+| `pipeline/core/pipeline.py`, `pipeline/core/queries.py` | Rabbin Batool | orchestrator and UI read side; Ilsa Maryam reviews as M2 integrator |
+| `pipeline/core/{ports,models,errors,inputs,intake,skills}.py` | Zain Jamshaid | shared contract; changes need approval from all three members |
+| `ui/` | Ilsa Maryam | web UI |
 | `tests/unit/<module>/`, `tests/stress/` | owner of the module under test | `tests/stress/` → Zain |
 | `tests/unit/adapters/`, `tests/integration/`, `tests/system/test_api.py` | Rabbin Batool | |
-| `tests/system/test_pipeline_system.py`, `tests/fixtures/` | Ilsa Maryam | |
-| `tests/blackbox/`, `tests/whitebox/` | per the SE431 test plan | owner to be confirmed by the team |
+| `tests/system/`, `tests/fixtures/` | Rabbin Batool | |
+| `tests/blackbox/` | Rabbin Batool | SE431 black-box design lead |
+| `tests/whitebox/` | Ilsa Maryam | SE431 white-box design lead |
 
-The team should also add a `.github/CODEOWNERS` file with this mapping (**to be done by the team before
-submission**), so that GitHub requests the right reviewer automatically.
+`.github/CODEOWNERS` holds this mapping, so GitHub requests the owner's review automatically on every pull request.
 
 ### 7.4 CI gates (`.github/workflows/ci.yml`)
 
@@ -686,16 +739,17 @@ Gates in order:
 1. gitleaks secret scan of the full history (`fetch-depth: 0`, QR-13)
 2. `ruff check .` (includes C901 ≤ 10)
 3. `ruff format --check .`
-4. `pylint pipeline --fail-under=9`
+4. `pylint pipeline --fail-under=9.9`
 5. dependency-direction grep (QR-09)
 6. no-browser-automation grep (NFR-08)
 7. `python -m pipeline.adapters.migrate`
 8. `pytest --cov=pipeline/core --cov-fail-under=60`, including integration tests
 9. `coverage.xml` uploaded as an artifact
 
-**Status:** the workflow has not run on GitHub yet because nothing has been pushed (**to be done by the team before
-submission:** push, confirm the first green run, then enable "require status checks" on `main`). Steps 2–5, 7 and 8
-were run locally with the results in §5.2 and §6.1.
+**Status:** the first push of the workflow did not run: an unquoted colon in a step name made `ci.yml` invalid YAML,
+so GitHub rejected it before any job started. This was fixed by quoting the step name, and every gate passed in run
+https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 (734 tests, core coverage 99 %).
+"Require status checks" is enabled on `main`, so a failing gate now blocks the merge.
 
 ---
 
@@ -705,7 +759,7 @@ were run locally with the results in §5.2 and §6.1.
 |---|---|
 | No labelled corpus, so QR-01 (≥ 90 % verdict agreement) is not measured yet | Build the 10-profile hand-labelled corpus and an evaluation script that reports agreement and any "unsupported → supported" errors |
 | Vector search is in memory with a hashing embedder (D5) | pgvector migration (`002_*.sql`), a pgvector-backed index behind the same matcher, a local sentence-embedding model behind `Embedder`; NFR-03 benchmark (top-k over 10,000 vectors < 300 ms) |
-| LLM is the rule-based `FakeLLMProvider` (D4) | Real `LLMProvider` adapter with schema validation (already enforced by `ClaimExtractor`), with the fake kept for tests and replay |
+| `ClaudeClaimProvider` output is not deterministic between runs (D4) | Record a prompt-hash cache of provider responses so that a re-run (not only a replay) of the same resume is reproducible; evaluate Claude against the rule-based provider on the labelled corpus |
 | Limiters bind to one event loop (§4.3) | Limiter registry keyed by the running loop. (The stress-test timing flake was fixed at M2: gaps are measured at limiter grant time with a 25 % tolerance; 0 failures in 20 runs.) |
 | `EmailSignal` rationale contained the matched email, persisted in `source_accounts.rationale` (not logged) | Fixed after review: the rationale now says "same email address" without the address; test `test_rationale_does_not_store_the_email_address` |
 | `RunRecord.replay_of` is unused; replays are not recorded | Persist replay runs with `replay_of` set, without overwriting the original results |
