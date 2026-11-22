@@ -1,7 +1,8 @@
 import pytest
 
-from pipeline.adapters.fakes import FakeHttpClient, FakeLLMProvider, HashingEmbedder
+from pipeline.adapters.fakes import FakeHttpClient, HashingEmbedder
 from pipeline.adapters.postgres import PostgresEraser
+from pipeline.adapters.rule_claims import RuleBasedClaimProvider
 from pipeline.core.collection import factory
 from pipeline.core.inputs import CandidateInput, JobRequirementInput, RunConfig
 from pipeline.core.pipeline import PipelineRun, Repositories
@@ -18,7 +19,7 @@ def pipeline(database, repos, minio_store, monkeypatch):
         Repositories(**repos),
         minio_store,
         FakeHttpClient(fixture_routes()),
-        FakeLLMProvider(),
+        RuleBasedClaimProvider(),
         PostgresEraser(database, minio_store),
         HashingEmbedder(),
         RunConfig(min_interval_seconds=0.0),

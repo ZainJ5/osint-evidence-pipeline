@@ -9,7 +9,8 @@ from urllib.parse import urlsplit
 
 import pytest
 
-from pipeline.adapters.fakes import FakeHttpClient, FakeLLMProvider, HashingEmbedder, in_memory_eraser
+from pipeline.adapters.fakes import FakeHttpClient, HashingEmbedder, in_memory_eraser
+from pipeline.adapters.rule_claims import RuleBasedClaimProvider
 from pipeline.core.errors import ValidationError
 from pipeline.core.inputs import JobRequirementInput, RunConfig
 from pipeline.core.pipeline import PipelineRun
@@ -20,7 +21,9 @@ JITTER = 0.005  # the fake records the call a few microseconds after the limiter
 
 
 def _pipeline(repos, blobs, http, config):
-    return PipelineRun(repos, blobs, http, FakeLLMProvider(), in_memory_eraser(repos, blobs), HashingEmbedder(), config)
+    return PipelineRun(
+        repos, blobs, http, RuleBasedClaimProvider(), in_memory_eraser(repos, blobs), HashingEmbedder(), config
+    )
 
 
 async def test_ins01_concurrent_runs_share_one_rate_limiter_per_source(system, candidate, job):

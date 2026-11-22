@@ -7,8 +7,7 @@ import re
 import time
 from json import dumps
 
-from pipeline.core.errors import CollectionError
-from pipeline.core.ports import BlobStore, CandidateEraser, Embedder, HttpClient, HttpResponse, LLMProvider, Repository
+from pipeline.core.ports import BlobStore, CandidateEraser, Embedder, HttpClient, HttpResponse, Repository
 
 
 class FakeHttpClient(HttpClient):
@@ -38,16 +37,6 @@ class FakeHttpClient(HttpClient):
         if isinstance(route, Exception):
             raise route
         return route
-
-
-class OfflineHttpClient(HttpClient):
-    """Used during replay (FR-14): any network call is a bug."""
-
-    async def get(self, url: str, params: dict | None = None) -> HttpResponse:
-        raise CollectionError("network access attempted during replay", code="NETWORK_DISABLED", context={"url": url})
-
-    async def post(self, url: str, json: dict) -> HttpResponse:
-        raise CollectionError("network access attempted during replay", code="NETWORK_DISABLED", context={"url": url})
 
 
 class InMemoryBlobStore(BlobStore):
@@ -107,71 +96,6 @@ class InMemoryEraser(CandidateEraser):
         for repo in [self.snapshots, *self.owned]:
             repo.remove_where(candidate_id=candidate_id)
         self.candidates.remove_where(id=candidate_id)
-
-
-CLAIM_PATTERNS = [
-    # "3 years of Python", "2+ yrs experience with Django"
-    (
-        re.compile(
-            r"(\d+(?:\.\d+)?)\+?\s*(?:years?|yrs?)\s+(?:of\s+)?(?:experience\s+(?:with|in)\s+)?"
-            r"([A-Za-z][\w+#\-]*(?:\.[A-Za-z]+)?)",
-            re.I,
-        ),
-        "skill_years",
-    ),
-    # "Codeforces rating 1600", "rated 1600 on Codeforces"
-    (re.compile(r"(codeforces|leetcode)\s+rating\s+(?:of\s+)?(\d{3,4})", re.I), "rating"),
-    (re.compile(r"rated\s+(\d{3,4})\s+on\s+(codeforces|leetcode)", re.I), "rating_rev"),
-    # "Skills: Python, Go, Docker"
-    (re.compile(r"skills?\s*:\s*([^\n.]+)", re.I), "skill_list"),
-]
-
-
-class FakeLLMProvider(LLMProvider):
-    """Deterministic stand-in for the LLM: rule-based claim extraction from resume text.
-
-    Same prompt in -> same output out, which is what makes tests and replay reproducible (R-02).
-    """
-
-    def complete(self, prompt: str, schema: dict) -> dict:
-        claims: list[dict] = []
-        seen = set()
-
-        def add(claim: dict) -> None:
-            key = (claim["kind"], claim["subject"].lower())
-            if key not in seen:
-                seen.add(key)
-                claims.append(claim)
-
-        for pattern, kind in CLAIM_PATTERNS:
-            for m in pattern.finditer(prompt):
-                if kind == "skill_years":
-                    add(
-                        {"text": m.group(0).strip(), "kind": "skill", "subject": m.group(2), "years": float(m.group(1))}
-                    )
-                elif kind == "rating":
-                    add(
-                        {
-                            "text": m.group(0).strip(),
-                            "kind": "rating",
-                            "subject": m.group(1).lower(),
-                            "rating": int(m.group(2)),
-                        }
-                    )
-                elif kind == "rating_rev":
-                    add(
-                        {
-                            "text": m.group(0).strip(),
-                            "kind": "rating",
-                            "subject": m.group(2).lower(),
-                            "rating": int(m.group(1)),
-                        }
-                    )
-                else:
-                    for skill in re.split(r"[,;/]| and ", m.group(1)):
-                        if skill.strip():
-                            add({"text": skill.strip(), "kind": "skill", "subject": skill.strip()})
-        return {"claims": claims}
 
 
 class HashingEmbedder(Embedder):
