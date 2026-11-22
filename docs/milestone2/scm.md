@@ -52,7 +52,7 @@ once "require status checks" is enabled on `main`.
 | Baseline | Tag | Content | Status |
 |---|---|---|---|
 | M1 | `m1-baseline` | Proposal and quality documents, README | to be tagged retroactively on the first commit that contains them |
-| M2 | `m2-baseline` | This build: all five modules, API, web UI, persistence, CI, M2 documents | Created on `main`. Per the rule below the tag is not moved: the final M2 state is tagged `m2-baseline.1` once the open pull requests are merged and CI is green on `main` |
+| M2 | `m2-baseline` | This build: all five modules, API, web UI, persistence, CI, M2 documents | Created on `main`. Per the rule below the tag is not moved: the final M2 state is tagged `m2-baseline.1` when CI is green on `main` |
 | M3 | `m3-baseline` | Final system | Week 13 |
 
 A baseline is an annotated tag on `main` created by the milestone Integrator after CI is green:
