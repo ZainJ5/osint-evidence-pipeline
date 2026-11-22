@@ -118,7 +118,7 @@ collection 51/52 = 98.1 %, matching 37/38 = 97.4 %, `pipeline.py` 18/18 = 100 % 
 | Unit tests, test-first, with in-memory fakes | FR-01…FR-16, NFR-04 | Unit testing (pytest, pytest-asyncio) | each module owner | continuous | module interface agreed | tests green, coverage gate met | `tests/unit/` |
 | White-box basis-path testing | FR-05, FR-08, FR-09, FR-12, FR-13 | CFG, V(G) three ways cross-checked with Ruff C901, basis paths, condition and loop coverage | Ilsa Maryam | M2 | functions stable, V(G) ≥ 3 | one passing test per feasible basis path; 100 % branch coverage of each analysed function | `docs/milestone2/whitebox-test-design.md`; `tests/whitebox/`; `docs/records/m2/whitebox-coverage.txt` |
 | Black-box testing | FR-01, FR-05, FR-09, FR-10, FR-12…FR-15, NFR-02 | Equivalence partitioning, boundary-value analysis, decision tables | Rabbin Batool | M2 | specification of each input | every partition/boundary has a test; defects logged as xfail with BB-DEF id | `docs/milestone2/blackbox-test-design.md`; `tests/blackbox/` |
-| Coverage gate | NFR-04, QR-10 | `pytest --cov=pipeline/core --cov-fail-under=60` | Rabbin Batool | every push | tests green | ≥ 60 % line coverage (M2: 98.9 % line, 97.7 % branch) | CI artifact `coverage` (`coverage.xml`); `docs/records/m2/coverage-full.txt` |
+| Coverage gate | NFR-04, QR-10 | `pytest --cov=pipeline/core --cov-fail-under=60` | Rabbin Batool | every push | tests green | ≥ 60 % line coverage (M2: 99 % line, 98 % with branches) | CI artifact `coverage` (`coverage.xml`); `docs/records/m2/coverage-full.txt` |
 | Secret scanning, e-mail scrubbing | NFR-06, QR-13 | gitleaks on full history (CI); unit tests of the log filter | Rabbin Batool | every push | repository has history | no finding | CI step "Secret scan"; `tests/unit/core/test_log.py` |
 
 ### 4.4 Integration and test phase
@@ -184,7 +184,7 @@ and passes; **Partial** = only part of the requirement is verified; **Open** = n
 | NFR-01 | T | S | `tests/stress/test_collection_stress.py`, `test_rate_limiter.py` (exact interval arithmetic with a fake clock) | Pass — stress test was flaky during M2 and was revised (VV-AN-01) |
 | NFR-02 | T | U, S | `test_collection_runner.py::test_one_source_failing_forever_yields_a_partial_result`, `test_pipeline_system.py::test_one_source_failing_gives_partial_run_with_other_evidence`, `tests/blackbox/test_bb_reliability.py` | Pass |
 | NFR-03 | T (A) | S | none (`test_bb_inputs.py` only checks `max_repos` validation) | Open — M3 performance harness |
-| NFR-04 | A, T | U | every port in `ports.py` has a fake in `fakes.py`; 98.9 % line coverage | Partial — "test-first" needs commit history, which does not exist yet (`scm.md`) |
+| NFR-04 | A, T | U | every port in `ports.py` has a fake in `fakes.py`; 99 % line coverage | Partial — tests and implementation are committed separately on each branch; failing-test-first commits are enforced from M3 (`scm.md` §6) |
 | NFR-05 | A | — | Ruff clean, Pylint 10.00/10, `docs/milestone2/static-analysis-report.md` | Pass |
 | NFR-06 | T, A | U | `tests/unit/core/test_log.py` (4), `tests/unit/adapters/test_http_adapter.py::test_token_defaults_to_env`, `test_github_token_sent_only_to_github` | Partial — gitleaks runs only in CI on pushed history |
 | NFR-07 | T | S | `test_pipeline_system.py::test_replay_reproduces_evidence_and_score_without_network` | Pass |
@@ -198,7 +198,7 @@ and passes; **Partial** = only part of the requirement is verified; **Open** = n
 | QR-07 | T | S | — | Open — requirement says "at M4"; there is no M4 (VV-AN-03) |
 | QR-08 | T | S | stress test, 20 candidates | Pass (VV-AN-01) |
 | QR-09 | A | — | CI grep; local run 2026-11-19 found no import | Pass |
-| QR-10 | A, T | U | coverage 98.9 % line of `pipeline/core`; fakes for every port | Pass |
+| QR-10 | A, T | U | coverage 99 % line of `pipeline/core`; fakes for every port | Pass |
 | QR-11 | A | — | max core V(G) = 7 (`inputs.py`); Ruff/Pylint clean | Pass |
 | QR-12 | T | U | `test_collector_factory.py::test_new_source_plugs_in_without_editing_existing_code` | Pass |
 | QR-13 | T, A | U | log filter tests; gitleaks in CI | Partial — as NFR-06 |
@@ -215,7 +215,7 @@ Summary at M2: FR 15 Pass, 1 Partial; NFR 5 Pass, 2 Partial, 1 Open; QR 9 Pass, 
 | Full suite without containers | `.venv/Scripts/python -m pytest -m "not integration" --cov=pipeline/core --cov-branch --cov-report=term-missing` | 556 passed, 10 deselected (integration), 0 xfailed — the black-box xfails were removed when BB-DEF-01…04 were fixed | `docs/records/m2/coverage-full.txt` |
 | Integration (PostgreSQL 16 + `cgr.dev/chainguard/minio` containers) | `set -a; . ./.env.example; set +a; .venv/Scripts/python -m pytest -m integration` | 10 passed | console |
 | White-box suite | `.venv/Scripts/python -m pytest tests/whitebox --cov=pipeline/core --cov-branch` | 34 passed | `docs/records/m2/whitebox-coverage.txt` |
-| Coverage of `pipeline/core` | same as full suite | **line 1268/1282 = 98.9 %, branch 295/302 = 97.7 %** (combined 99 % as printed) | `docs/records/m2/coverage-full.txt` |
+| Coverage of `pipeline/core` | same as full suite | **1,642 statements, 22 missed (99 % line); 380 branches, 12 partial (98 % combined)** on `m2-baseline`; CI https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 | `docs/records/m2/coverage-full.txt` |
 | Static analysis | `ruff check .`; `ruff format --check .`; `pylint pipeline --fail-under=9` | all clean; Pylint 10.00/10 | `docs/records/m2/static-analysis-after/` |
 
 ## 8. Anomaly reporting and resolution

@@ -64,10 +64,7 @@ ruff check pipeline --select C901 --config "lint.mccabe.max-complexity=0" --outp
 
 With the threshold at 0, Ruff reports V(G) for every function.
 
-Ruff's McCabe counts a nested `def` as +1 and adds its decision points to the enclosing function. This affects two functions:
-
-- `create_app`: each of its 6 route handlers adds to its count.
-- `FakeLLMProvider.complete`: its nested `add` helper adds to its count.
+Ruff's McCabe counts a nested `def` as +1 and adds its decision points to the enclosing function.
 
 ## 3. How static analysis runs in CI
 
@@ -199,31 +196,32 @@ Three inline disables remain, all `import-outside-toplevel`, and all are Justifi
 - **`pipeline/interface/composition.py:20-21`.** The PostgreSQL and MinIO adapters (and with them psycopg and minio) are imported only when `DATABASE_URL` is set. This lets the in-memory demo run without those drivers.
 - **`pipeline/adapters/fakes.py`, in `in_memory_repositories`.** It imports `Repositories` from the orchestrator module only when it is called, so importing the fakes does not load the whole pipeline.
 
-## 6. Complexity: top 10 functions (after the fixes)
+## 6. Complexity: most complex functions
 
-Source: `static-analysis-after/complexity.txt`. QR-11's limit is V(G) ≤ 10. No function exceeds it.
+Every function with V(G) of 5 or more on the current code (same Ruff command as above). QR-11's limit is V(G) ≤ 10;
+no function exceeds it, and the highest is 7.
 
 | # | Function | Location | V(G) | White-box (basis-path) target? | Other tests |
 |---|---|---|---|---|---|
-| 1 | `FakeLLMProvider.complete` | `pipeline/adapters/fakes.py:136` | 10 | No: test double, not production code. | Exercised by `tests/unit/scoring/test_claims.py` and the system tests |
-| 2 | `create_app` | `pipeline/interface/api.py:77` | 9 | No | `tests/blackbox/test_bb_api.py`, `tests/system/test_api.py` |
-| 3 | `CandidateInput.__post_init__` | `pipeline/core/inputs.py:27` | 7 | No | `tests/blackbox/test_bb_inputs.py`, `tests/unit/collection/test_candidate_input.py` |
-| 4 | `RatingClaimRule.verify` | `pipeline/core/scoring/rules.py:90` | 6 | No | `tests/unit/scoring/test_rating_rule.py`, `tests/unit/scoring/test_verifier.py` |
-| 5 | `RunConfig.__post_init__` | `pipeline/core/inputs.py:72` | 6 | No | `tests/blackbox/test_bb_inputs.py`, `tests/unit/collection/test_candidate_input.py` |
-| 6 | `Collector._fetch` | `pipeline/core/collection/collector.py:40` | 6 | **Yes**: WB-COL-01 to 07 | `tests/whitebox/test_basis_paths_collection.py` |
-| 7 | `ClaimExtractor._parse_item` | `pipeline/core/scoring/claims.py:46` | 5 | No | `tests/unit/scoring/test_claims.py` |
-| 8 | `RequirementMatcher.match` | `pipeline/core/matching/matcher.py:23` | 5 | No | `tests/unit/matching/test_requirement_matcher.py`, `tests/blackbox/test_bb_matching.py` |
-| 9 | `build_account_ref` | `pipeline/core/identity/profiles.py:44` | 5 | No | `tests/unit/identity/test_profiles.py` |
-| 10 | `FakeHttpClient._serve` | `pipeline/adapters/fakes.py:29` | 5 | No: test double. | Used by every collection test |
+| 1 | `CandidateInput.__post_init__` | `pipeline/core/inputs.py:28` | 7 | No | `tests/blackbox/test_bb_inputs.py`, `tests/unit/collection/test_candidate_input.py` |
+| 2 | `RequirementMatcher.match` | `pipeline/core/matching/matcher.py:31` | 6 | No | `tests/unit/matching/test_requirement_matcher.py`, `tests/blackbox/test_bb_matching.py` |
+| 3 | `Collector._fetch` | `pipeline/core/collection/collector.py:40` | 6 | **Yes**: WB-COL-01 to 07 | `tests/whitebox/test_basis_paths_collection.py` |
+| 4 | `build_account_ref` | `pipeline/core/identity/profiles.py:44` | 5 | No | `tests/unit/identity/test_profiles.py` |
+| 5 | `_valid` | `pipeline/core/scoring/claims.py:53` | 5 | No | `tests/unit/scoring/test_claims.py`, `test_claim_extraction_realistic.py` |
+| 6 | `_profile_handle` | `pipeline/core/intake.py:38` | 5 | No | `tests/unit/core/test_intake.py` |
+| 7 | `RuleBasedClaimProvider.complete` | `pipeline/adapters/rule_claims.py:164` | 5 | No | `tests/unit/adapters/test_rule_claims.py`, `tests/unit/scoring/test_claim_extraction_realistic.py` |
+| 8 | `classified_lines` | `pipeline/adapters/rule_claims.py:79` | 5 | No | `tests/unit/adapters/test_rule_claims.py` |
+| 9 | `_platform_claims` | `pipeline/adapters/rule_claims.py:123` | 5 | No | `tests/unit/adapters/test_rule_claims.py` |
+| 10 | `read_resume` | `pipeline/adapters/resume_reader.py:61` | 5 | No | `tests/unit/adapters/test_resume_reader.py` |
+| 11 | `ClaudeClaimProvider._create` | `pipeline/adapters/claude_llm.py:75` | 5 | No | `tests/unit/adapters/test_claude_llm.py` (SDK mocked) |
+| 12 | `FakeHttpClient._serve` | `pipeline/adapters/fakes.py:28` | 5 | No: test double. | Used by every collection test |
 
 Notes:
 
-- **White-box targets below the top 10.** The basis-path suites also cover:
-  - `IdentityResolver.resolve` (V(G) = 4) and `IdentityResolver._link` (V(G) = 3), in `tests/whitebox/test_basis_paths_identity.py`.
-  - `SkillClaimRule.verify` and `_validated` (V(G) = 4 each), in `tests/whitebox/test_basis_paths_scoring.py`.
-- **#1, `complete`, is at the limit, not over it.** Its count includes the nested `add` helper (+1) and the 3-way `if/elif/elif` claim-kind dispatch. It is an adapter-side test double, not a core function, so QR-11's core-function clause does not apply. No action.
-- **#2, `create_app`, is inflated by the counting rule.** Its 9 is 1 for the function, plus 6 nested route handlers at +1 each, plus 2 `if` statements. No single handler has V(G) above 2. No action.
-- **#3 and #5 are not basis-path tested.** These are the highest-complexity core functions (the input validators) and are covered only by black-box and unit tests. See residual item R-3.
+- **White-box targets.** The basis-path suites cover `Collector._fetch`, `IdentityResolver.resolve`,
+  `IdentityResolver._link`, `SkillClaimRule.verify` and `_validated` (Section 4 of the white-box design).
+- **#1 is not basis-path tested.** It is the most complex core function (the candidate input validator) and is covered
+  by black-box and unit tests. See residual item R-3.
 
 ## 7. Significant findings and corrective/preventive actions (CAPA)
 
@@ -288,6 +286,6 @@ This result was the same on three consecutive runs.
 |---|---|---|
 | R-1 | Add docstrings to the abstract methods in `pipeline/core/ports.py` that state each method's contract and the errors it raises. This is the useful part of the 50 suppressed `missing-function-docstring` hits. | M3 |
 | R-2 | Pylint is not run on `tests/`; only Ruff checks them. Accepted for now: test code is checked by Ruff (E, F, B, SIM), and Pylint conventions such as docstrings and redefined pytest fixtures produce mostly noise there. | Review in M3 |
-| R-3 | `CandidateInput.__post_init__` (V(G) = 7) and `RunConfig.__post_init__` (V(G) = 6) are the most complex core functions and have no basis-path tests, only black-box and unit tests. They are candidates for the M3 white-box set. | M3 |
+| R-3 | `CandidateInput.__post_init__` (V(G) = 7) is the most complex core function and has no basis-path tests, only black-box and unit tests. It is a candidate for the M3 white-box set. | M3 |
 | R-4 | CAPA-SA-4 (pre-commit hook) and CAPA-SA-5 (narrower thresholds instead of global disables). | M3 |
 | R-5 | `ruff check` in CI runs over `.`, but the local commands in this report use `pipeline tests`. Both returned 0 findings in the after-run (`static-analysis-after/ruff.txt`). | – |
