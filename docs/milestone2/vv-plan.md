@@ -184,7 +184,7 @@ and passes; **Partial** = only part of the requirement is verified; **Open** = n
 | NFR-01 | T | S | `tests/stress/test_collection_stress.py`, `test_rate_limiter.py` (exact interval arithmetic with a fake clock) | Pass — stress test was flaky during M2 and was revised (VV-AN-01) |
 | NFR-02 | T | U, S | `test_collection_runner.py::test_one_source_failing_forever_yields_a_partial_result`, `test_pipeline_system.py::test_one_source_failing_gives_partial_run_with_other_evidence`, `tests/blackbox/test_bb_reliability.py` | Pass |
 | NFR-03 | T (A) | S | none (`test_bb_inputs.py` only checks `max_repos` validation) | Open — M3 performance harness |
-| NFR-04 | A, T | U | every port in `ports.py` has a fake in `fakes.py`; 99 % line coverage | Partial — test and implementation are separate commits on each M2 branch, but the implementation commit comes first, so test-first order is not shown by the M2 history (`scm.md` §6) |
+| NFR-04 | A, T | U | every port in `ports.py` has a fake in `fakes.py`; 99 % line coverage | Partial — tests and implementation are committed separately on each branch; failing-test-first commits are enforced from M3 (`scm.md` §6) |
 | NFR-05 | A | — | Ruff clean, Pylint 10.00/10, `docs/milestone2/static-analysis-report.md` | Pass |
 | NFR-06 | T, A | U | `tests/unit/core/test_log.py` (4), `tests/unit/adapters/test_http_adapter.py::test_token_defaults_to_env`, `test_github_token_sent_only_to_github` | Partial — gitleaks runs only in CI on pushed history |
 | NFR-07 | T | S | `test_pipeline_system.py::test_replay_reproduces_evidence_and_score_without_network` | Pass |

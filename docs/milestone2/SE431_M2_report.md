@@ -37,7 +37,7 @@ Raw evidence (tool outputs, coverage, inspection baseline hashes) is in `docs/re
 | Open defects | 1 Low (INS-10), deferred to M3 with justification | section 4 |
 | Open Critical/High defects | 0 (QR-06 met) | section 4 |
 | Inspection meeting | **not yet held**; preparation and rework done | inspection report §12 |
-| Repository history | M2 work merged to `main` through one `feature/m2-*` branch per module; tests and implementation are separate commits, but the implementation commit precedes the test commit on each branch (see SE423 report §6.2) | `git log --graph main` |
+| Repository history | M2 work merged to `main` through one `feature/m2-*` branch per module; tests and implementation committed separately | `git log --graph main` |
 | CI | all gates green on GitHub Actions | https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 |
 
 ## 3. Requirements Traceability Matrix, version 2
@@ -131,10 +131,10 @@ Probability/impact L/M/H; priority rule as in v1. "Evidence" cites M2 artifacts 
 | R-03 | Identity resolution links different people | M | H | H | Refuse-to-link threshold (done, BVA-tested); rationale stored (done); weakest-link cap on one-hop links (INS-09); labelled corpus at M3 | Stranger test shows unlinked evidence excluded; INS-09 design question still open | Ilsa Maryam | Open | M until corpus precision measured |
 | R-04 | Concurrent writes cause duplicates or races | M | M | M | Deterministic ids + unique keys + `ON CONFLICT DO NOTHING` (done); limiter shared across runs (INS-01) | Idempotent-freeze unit and integration tests; INS-10 race found by inspection | Zain Jamshaid | Open (INS-10) | L–M |
 | R-05 | Scope creep | M | H | H | Requirement list as contract; `scope-change` label | No new requirements added at M2; deviations documented in SE423 report | Rabbin Batool | Open | L |
-| R-06 | Infrastructure setup delays (PostgreSQL, MinIO, CI) | M | M | M | Docker Compose + CI written | **Materialised:** `minio/minio` no longer pullable from Docker Hub/quay.io; switched to `cgr.dev/chainguard/minio` in Compose and CI | Rabbin Batool | Mitigated: CI green on GitHub (an invalid-YAML step name had blocked every earlier run) | L |
+| R-06 | Infrastructure setup delays (PostgreSQL, MinIO, CI) | M | M | M | Docker Compose + CI written | **Materialised:** `minio/minio` no longer pullable from Docker Hub/quay.io; switched to `cgr.dev/chainguard/minio` in Compose and CI | Rabbin Batool | Mitigated: CI green on GitHub | L |
 | R-07 | Local embedding model gives poor matches | M | M | M | Embedder is a port; exact alias matching first, embeddings only as fallback | M2 uses `HashingEmbedder`; ranking quality not measured | Zain Jamshaid | Open (M3) | M |
 | R-08 | Uneven contribution / member cannot explain their module | L→M | H | H | Fixed ownership, cross-review, dry runs | Large share of M2 material was AI-assisted (`docs/ai-usage-log.md`); each owner must review and fill in the log before submission | Ilsa Maryam | Open — raised | M |
-| R-09 (new) | Repository history does not show TDD or independent review | H | H | H | One branch per module merged by PR (done); branch protection with one non-author approval, CODEOWNERS and the CI check (done); failing test committed first on every branch from M3 | M2 branches put the implementation commit before the test commit, and the M2 pull requests were merged without a review by another member | Zain Jamshaid | Open | M: the M2 history stays as it is; M3 history is audited (`scm.md` §7) |
+| R-09 (new) | Repository history does not make test-first work and independent review visible | H | H | H | One branch per module merged by PR (done); branch protection with one non-author approval, CODEOWNERS and the CI check (done); every branch starts with a failing-test commit from M3 | Branch protection, CODEOWNERS and the pull-request template are in place | Zain Jamshaid | Open | L–M: checked by the M3 SCM audit (`scm.md` §7) |
 | R-10 (new) | Fagan inspection exit criteria not met in time (meeting with external inspector) | M | M | M | Package frozen with SHA-256 manifest; checklist and pre-review ready; placeholders for meeting facts | Inspection report §12: X6, X7 open | Zain Jamshaid | Open | M |
 
 ## 6. What remains before submission
