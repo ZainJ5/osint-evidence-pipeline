@@ -147,3 +147,13 @@ async def test_rate_limited_response_has_its_own_code_and_is_not_retried(sleep):
         await collector.collect("octo-dev")
     assert err.value.code == "RATE_LIMITED"
     assert len(http.calls) == 1 and sleep.delays == []
+
+
+async def test_no_attempt_raises_a_collection_error_not_a_type_error(sleep):
+    """WB-OBS-01: if the retry loop ever ran zero times, `raise None` would be a TypeError."""
+    collector, http = probe(status(200), sleep)
+    object.__setattr__(collector._config, "max_retries", -1)  # bypasses RunConfig validation on purpose
+    with pytest.raises(CollectionError) as err:
+        await collector.collect("octo-dev")
+    assert err.value.code == "NO_ATTEMPT"
+    assert http.calls == []
