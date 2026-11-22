@@ -98,7 +98,7 @@ plan in `docs/milestone2/scm.md`), so she presents it and does not read or inspe
 | E1 | Code builds and imports | `pytest` collects and imports every module of `pipeline/` | Yes |
 | E2 | All tests pass | `.venv/Scripts/python -m pytest -q -m "not integration"` on the baseline: **416 passed, 10 deselected, 6 xfailed**. The 10 deselected are the PostgreSQL/MinIO integration tests (need `docker compose up`); the 6 xfailed are known black-box anomalies BB-DEF-01..04 in `inputs.py`, outside the package. | Yes (unit, system, stress, black-box) |
 | E3 | Lint clean | `ruff check .` → "All checks passed!"; `ruff format --check` clean for every package file (one test file outside the package, being written in parallel, still needed formatting) | Yes for the package |
-| E4 | Package frozen at a named baseline | The repository has no commits yet (see `docs/milestone2/scm.md`), so a git tag was not possible. The package was frozen as **M2-INSP-BASE** by a SHA-256 manifest: [`docs/records/m2/inspection-baseline.sha256`](../records/m2/inspection-baseline.sha256) (`sha256sum -c` shows exactly which files changed since). When the first commit exists, tag the commit holding these hashes as `m2-inspection-base`. | Yes (manifest); tag [to fill in] |
+| E4 | Package frozen at a named baseline | The package was frozen before the M2 work was committed to the repository, so a git tag was not possible at that point. The package was frozen as **M2-INSP-BASE** by a SHA-256 manifest: [`docs/records/m2/inspection-baseline.sha256`](../records/m2/inspection-baseline.sha256) (`sha256sum -c` shows exactly which files changed since). When the first commit exists, tag the commit holding these hashes as `m2-inspection-base`. | Yes (manifest); tag [to fill in] |
 | E5 | Checklist and requirements available to every participant | Section 6 and `docs/requirements.md` | Yes |
 | E6 | Moderator confirms the package is ready and distributes it | [to fill in: date distributed] | [to fill in] |
 
@@ -167,7 +167,7 @@ pre-review)*, unless stated.
 | INS-08 | `pipeline/core/scoring/scoring.py:72` | C-03 | `_validated` accepts `NaN` and `inf` weights: `nan < 0` is false. A `NaN` weight makes the weighted mean `NaN`, which the clamp turns into a total of 0 without any error. Also found independently by white-box testing as anomaly WB-DEF-01. | Low | Data | Fixed, verified |
 | INS-09 | `pipeline/core/identity/resolver.py:54-55` | C-14 | A one-hop link takes the hop's confidence without bounding it by the confidence of the account it hops through. Worked example: GitHub `alex` linked by name only (0.50), Codeforces `alex` then linked through GitHub by identical handle with **0.60** — more confident than the link it depends on. The reported confidence overstates the evidence (FR-08 "calibrated"); the link/no-link decision does not change at the default threshold. | Low | Logic | Fixed, verified |
 | INS-10 | `pipeline/core/snapshot/store.py:35, 40-42` with `pipeline/adapters/postgres.py:212-220` | C-06, C-05 | Blobs are content-addressed and shared between candidates. `PostgresEraser` selects "keys no other candidate uses" and deletes them later, while `SnapshotStore.freeze` puts the blob and only then inserts the row. If another candidate freezes a byte-identical payload (e.g. an empty Codeforces `result` list) between the eraser's SELECT and its blob delete, that candidate's new snapshot row points to a deleted blob: its replay fails with `NOT_FOUND`. Narrow window, needs concurrent deletion; QR-14 integrity check detects it (no silent wrong result). | Low | Data (concurrency) | Deferred to M3 |
-| INS-11 | `pipeline/adapters/http.py:18-23, 31-32` (with `interface/composition.py:32`) | C-12 | `HttpAdapter` opens an `httpx.AsyncClient` but nothing ever calls `aclose()`: the composition root and the API have no shutdown hook. Connections are released only at process exit; in tests each app instance leaks a client. | Low | Interface (resource lifecycle) | Deferred to M3 |
+| INS-11 | `pipeline/adapters/http.py:18-23, 31-32` (with `interface/composition.py:32`) | C-12 | `HttpAdapter` opens an `httpx.AsyncClient` but nothing ever calls `aclose()`: the composition root and the API have no shutdown hook. Connections are released only at process exit; in tests each app instance leaks a client. | Low | Interface (resource lifecycle) | Fixed, verified |
 | INS-12 | `tests/stress/test_collection_stress.py:1-10` | C-17 | The NFR-01 stress test drives `CollectionRunner` directly, so it cannot detect that the orchestrator bypasses the shared runner (INS-01). The requirement was tested below the level where it broke. | Low | Test | Fixed, verified |
 
 Cross-reference: the black-box design separately logged BB-DEF-01..04 (unvalidated `RunConfig`/job fields in
@@ -251,21 +251,26 @@ from coming back. Every new test below failed against the baseline before the fi
 | INS-08 | Validation checked sign and type but not finiteness; Python comparisons with NaN are always false. | Weights must satisfy `0 <= w < inf` (rejects NaN and inf) (`pipeline/core/scoring/scoring.py`). | Checklist C-03 (NaN/inf for every numeric parameter). Same pattern open as BB-DEF-02 in `inputs.py`: M3 action to add one shared finite-number check to `RunConfig`. | `tests/unit/scoring/test_inspection_m2_scoring.py::test_ins08_non_finite_weights_are_rejected[nan, inf]` → pass; `tests/whitebox/test_basis_paths_scoring.py::test_wb_sco_11_non_finite_weight_is_rejected` (was strict xfail WB-DEF-01) → passes | 2026-11-19 | Closed |
 | INS-09 | The hop rule took the maximum of direct and hop confidence without considering the path. | Hop confidence capped by the confidence of the account it hops through: `max(direct, min(hop, direct[j]))` (`pipeline/core/identity/resolver.py`). Link decisions at the default threshold are unchanged (all identity unit, black-box and white-box tests pass). | Checklist C-14 (derived confidence bounded by its inputs). **Open design question for the meeting:** should a hop use the product rule (0.5 × 0.6 = 0.3, i.e. *not* linked) instead of the weakest link? Needs the M3 calibration corpus. | `tests/unit/identity/test_inspection_m2_identity.py::test_ins09_hop_confidence_never_exceeds_the_account_it_hops_through` — failed (`0.6 <= 0.5`) → passes | 2026-11-19 | Closed |
 | INS-10 | Blob sharing across candidates (a deliberate, tested design decision) makes deletion a check-then-act across two stores without a common lock. | None yet. **Deferred, justification:** needs concurrent deletion of one candidate and a byte-identical freeze for another within milliseconds; the M2 deployment is a single API worker; the effect is detected by the QR-14 integrity check (`NOT_FOUND`), never a silent wrong score. Fixing it changes a tested design decision (shared blobs), which needs the team's agreement (risk R-05 change control). | M3 owner Rabbin Batool: choose candidate-scoped object keys **or** a PostgreSQL advisory lock taken by both `freeze` and the eraser; add an integration test that interleaves delete and freeze. Checklist C-06 (check-then-act). | Reasoned trace of the interleaving (section 8); test to be written with the fix. | — | Open |
-| INS-11 | The adapter offers `aclose()`, but no owner in the composition root is responsible for calling it. | None yet. **Deferred, justification:** one client per process in production, closed at process exit; no functional effect in M2. | M3 owner Rabbin Batool: give `PipelineRun`/composition an `aclose()` and call it from a FastAPI lifespan handler; test that the client is closed on shutdown. Checklist C-12. | — | — | Open |
+| INS-11 | The adapter offers `aclose()`, but no owner in the composition root is responsible for calling it. | `PipelineRun.aclose()` closes the HTTP client it was given; the FastAPI lifespan calls it at shutdown (`pipeline/interface/api.py:130`). Originally deferred to M3; closed during M2. | M3 owner Rabbin Batool: give `PipelineRun`/composition an `aclose()` and call it from a FastAPI lifespan handler; test that the client is closed on shutdown. Checklist C-12. | — | — | Open |
 | INS-12 | The stress test was written at the unit that implements the limiter, not at the entry point that uses it. | New orchestrator-level concurrency test (the INS-01 test) (`tests/system/test_inspection_m2.py`). | Checklist C-17 (test at the level where the requirement can break). | `test_ins01_concurrent_runs_share_one_rate_limiter_per_source` → passes | 2026-11-19 | Closed |
 
 Files changed by the rework: `pipeline/core/pipeline.py`, `pipeline/core/scoring/rules.py`,
 `pipeline/core/scoring/scoring.py`, `pipeline/core/identity/resolver.py`. Tests added:
 `tests/system/test_inspection_m2.py`, `tests/unit/scoring/test_inspection_m2_scoring.py`,
 `tests/unit/identity/test_inspection_m2_identity.py`. `sha256sum -c docs/records/m2/inspection-baseline.sha256`
-reports exactly these four source files as changed since M2-INSP-BASE.
+reported exactly these four source files as changed after the rework. Later M2 work (the web UI and its API,
+deviation D14 in the SE423 report, and the INS-11 fix) also changed `pipeline/core/collection/collector.py`,
+`pipeline/core/snapshot/store.py`, `pipeline/adapters/postgres.py` and `pipeline/adapters/http.py`, so on the
+`m2-baseline` code the check reports 8 of the 11 package files as changed. `runner.py`, `rate_limiter.py` and
+`extractor.py` are unchanged. Run the check with LF line endings (`git show m2-baseline:<file> | sha256sum`), since a
+Windows checkout with `core.autocrlf=true` changes every hash.
 
 ## 12. Exit criteria
 
 | # | Criterion | Status |
 |---|---|---|
 | X1 | Every Critical/High/Medium defect fixed and verified by a test that failed before the fix | Met for INS-01..05 (pre-review). Defects added at the meeting: [to fill in] |
-| X2 | Every Low defect fixed, or deferred with justification, owner and target milestone | Met (INS-10, INS-11 deferred to M3, owner Rabbin Batool) |
+| X2 | Every Low defect fixed, or deferred with justification, owner and target milestone | Met (INS-11 fixed; INS-10 deferred to M3, owner Rabbin Batool) |
 | X3 | Full non-integration suite passes after rework | Met: `.venv/Scripts/python -m pytest -q -m "not integration"` → **546 passed, 10 deselected, 6 xfailed** (2026-11-19). The 6 xfailed are BB-DEF-01..04 outside the package. |
 | X4 | Ruff and Pylint clean on the reworked code | Met: `ruff check .` → all checks passed; `pylint pipeline` → 10.00/10 |
 | X5 | Integration tests re-run against PostgreSQL and MinIO (INS-02 and INS-06 depend on round-trip equality) | Met: `pytest -m integration` against `postgres:16` and `cgr.dev/chainguard/minio` containers → **10 passed** (2026-11-19) |
@@ -280,12 +285,12 @@ on the meeting.
 Follow-up actions:
 
 1. Before the meeting each inspector verifies the pre-review findings for their artifacts on the frozen baseline
-   (`sha256sum -c docs/records/m2/inspection-baseline.sha256` shows the baseline differs only in the four reworked
-   files; use the baseline versions for preparation).
+   (the SHA-256 manifest identifies the baseline versions to use for preparation; see section 11 for which files have
+   changed since).
 2. Integration tests (X5) re-run after rework: 10 passed on 2026-11-19.
 3. Open one GitHub issue per defect (label `defect` plus a severity label) and reference it from the fix commit, one
    commit per defect (failing test first, then fix), as `docs/milestone2/scm.md` requires.
-4. Track INS-10 and INS-11 to M3 closure; decide the INS-09 design question (weakest link vs product rule).
+4. Track INS-10 to M3 closure (INS-11 closed during M2); decide the INS-09 design question (weakest link vs product rule).
 
 Lessons:
 

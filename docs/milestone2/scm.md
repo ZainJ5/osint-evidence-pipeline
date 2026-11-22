@@ -52,7 +52,7 @@ once "require status checks" is enabled on `main`.
 | Baseline | Tag | Content | Status |
 |---|---|---|---|
 | M1 | `m1-baseline` | Proposal and quality documents, README | to be tagged retroactively on the first commit that contains them |
-| M2 | `m2-baseline` | This build: all five modules, API, persistence, CI, M2 documents | **to be created at submission** |
+| M2 | `m2-baseline` | This build: all five modules, API, web UI, persistence, CI, M2 documents | Created on `main`. It was tagged before CI had ever run (the workflow file was invalid YAML); the first green run is https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893, on the CI fix. Per the rule below the tag is not moved: the corrected state is tagged `m2-baseline.1` once the M2 fix pull requests are merged and CI is green on `main` |
 | M3 | `m3-baseline` | Final system | Week 13 |
 
 A baseline is an annotated tag on `main` created by the milestone Integrator after CI is green:
@@ -73,10 +73,15 @@ Settings → Branches → Add rule for `main`:
 
 Evidence to capture: a screenshot of the rule, plus `gh api repos/ZainJ5/osint-evidence-pipeline/branches/main/protection`.
 
-## 6. Commit plan before submission (makes TDD and ownership visible)
+**Status:** applied to `main` (required review, CODEOWNERS review, required `test` check, no force push or
+deletion; squash and rebase merging disabled in the repository settings).
 
-Each owner commits **their own** files from their own GitHub account, on their own branch, in test-first order.
-Suggested sequence (one pull request per branch, merged in this order because later modules depend on earlier ones):
+## 6. Commit plan (as used for M2)
+
+Each owner commits **their own** files from their own GitHub account, on their own branch. The M2 work was merged
+through one `feature/m2-*` branch per module. On those branches the implementation commit precedes the test commit,
+so test-first order is not visible for M2 (SE423 report §6.2); from M3 the failing test is committed first.
+Sequence used (one pull request per branch, merged in dependency order):
 
 | Order | Branch | Author | Commits (in order) |
 |---|---|---|---|
@@ -92,8 +97,8 @@ Suggested sequence (one pull request per branch, merged in this order because la
 
 Then tag `m2-baseline` (section 4) and record the CI run URL of the tagged commit in the SE431 report.
 
-Create GitHub issues for each row (labels `module:Mx`, `milestone:M2`) and the inspection defects (label `defect`,
-severity label) before opening the pull requests, and reference them with `Closes #n`.
+GitHub issues exist for the inspection and black-box defects (label `defect`, a severity label and an origin
+label); new pull requests reference their issue with `Closes #n`.
 
 ## 7. Audit checklist (to run at M3 by the SCM audit lead)
 
