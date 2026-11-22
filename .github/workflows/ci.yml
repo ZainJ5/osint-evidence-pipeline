@@ -66,7 +66,7 @@ jobs:
       - name: Pylint
         run: pylint pipeline --fail-under=9.9
 
-      - name: Dependency direction (QR-09: core must not import adapters or interface)
+      - name: "Dependency direction (QR-09: core must not import adapters or interface)"
         run: '! grep -rnE "from pipeline\.(adapters|interface)|import pipeline\.(adapters|interface)" pipeline/core'
 
       - name: No browser automation (NFR-08)
