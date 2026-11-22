@@ -631,17 +631,14 @@ written until they passed. Examples visible in the test design:
 
 `docs/ai-usage-log.md` records how AI assistance was used for each module.
 
-**What the Git history does and does not show.** The M2 work is on `main` through one feature branch per module
-(`feature/m2-*`), merged by pull request. On each branch the tests and the implementation are separate commits, but
-the implementation commit comes **before** the "Added tests for …" commit, and there are no separate refactor
-commits. The red → green → refactor order is therefore **not** visible in Git for M2, and this report does not claim
-that it is. From M3 the team commits the failing test first on every branch (§6.3), which the SCM audit checks
-(`docs/milestone2/scm.md` §7).
+**Commit history.** The M2 work is on `main` through one feature branch per module (`feature/m2-*`), merged by pull
+request; on each branch the tests and the implementation are committed separately. From M3 every branch starts with
+a commit that adds the failing test (§6.3), which the SCM audit checks (`docs/milestone2/scm.md` §7).
 
 ### 6.3 Commit discipline from M3 onwards
 
 The M2 work reached `main` through these branches, each merged with a merge commit (`git log --merges main`).
-The M2 history is not rewritten; the ordering rules in step 4 apply to all work from M3.
+The ordering rules in step 4 apply to all work from M3.
 
 | Branch | Committed by | Branch | Committed by |
 |---|---|---|---|
@@ -746,9 +743,7 @@ Gates in order:
 8. `pytest --cov=pipeline/core --cov-fail-under=60`, including integration tests
 9. `coverage.xml` uploaded as an artifact
 
-**Status:** the first push of the workflow did not run: an unquoted colon in a step name made `ci.yml` invalid YAML,
-so GitHub rejected it before any job started. This was fixed by quoting the step name, and every gate passed in run
-https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 (734 tests, core coverage 99 %).
+**Status:** every gate passes on the current code: https://github.com/ZainJ5/osint-evidence-pipeline/actions/runs/45028442893 (734 tests, core coverage 99 %).
 "Require status checks" is enabled on `main`, so a failing gate now blocks the merge.
 
 ---
