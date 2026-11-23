@@ -3,7 +3,6 @@
 import os
 
 from pipeline.adapters.fakes import (
-    FakeLLMProvider,
     HashingEmbedder,
     InMemoryBlobStore,
     in_memory_eraser,
@@ -30,12 +29,9 @@ def build_claim_provider() -> LLMProvider:
             return ClaudeClaimProvider()
         except ImportError:
             pass
-    try:
-        from pipeline.adapters.rule_claims import RuleBasedClaimProvider
+    from pipeline.adapters.rule_claims import RuleBasedClaimProvider
 
-        return RuleBasedClaimProvider()
-    except ImportError:
-        return FakeLLMProvider()
+    return RuleBasedClaimProvider()
 
 
 def build_pipeline(config: RunConfig | None = None) -> PipelineRun:

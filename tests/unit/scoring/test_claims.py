@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 
-from pipeline.adapters.fakes import FakeLLMProvider
+from pipeline.adapters.rule_claims import RuleBasedClaimProvider
 from pipeline.core.errors import ScoringError
 from pipeline.core.ports import LLMProvider
 from pipeline.core.scoring.claims import CLAIM_NAMESPACE, CLAIM_SCHEMA, ClaimExtractor
@@ -25,7 +25,7 @@ class StubLLM(LLMProvider):
 
 
 def test_extracts_claims_from_sample_resume_with_fake_llm():
-    claims = ClaimExtractor(FakeLLMProvider()).extract("cand-1", RESUME)
+    claims = ClaimExtractor(RuleBasedClaimProvider()).extract("cand-1", RESUME)
     summary = [(c.kind, c.subject, c.years, c.rating) for c in claims]
     assert summary == [
         ("skill", "Python", 3.0, None),
@@ -45,15 +45,15 @@ def test_prompt_contains_resume_and_schema_is_passed():
 
 
 def test_claim_ids_are_deterministic_uuid5():
-    first = ClaimExtractor(FakeLLMProvider()).extract("cand-1", RESUME)
-    second = ClaimExtractor(FakeLLMProvider()).extract("cand-1", RESUME)
+    first = ClaimExtractor(RuleBasedClaimProvider()).extract("cand-1", RESUME)
+    second = ClaimExtractor(RuleBasedClaimProvider()).extract("cand-1", RESUME)
     assert [c.id for c in first] == [c.id for c in second]
     assert first[0].id == str(uuid.uuid5(CLAIM_NAMESPACE, "cand-1:skill:python"))
 
 
 def test_claim_ids_differ_per_candidate():
-    one = ClaimExtractor(FakeLLMProvider()).extract("cand-1", RESUME)
-    two = ClaimExtractor(FakeLLMProvider()).extract("cand-2", RESUME)
+    one = ClaimExtractor(RuleBasedClaimProvider()).extract("cand-1", RESUME)
+    two = ClaimExtractor(RuleBasedClaimProvider()).extract("cand-2", RESUME)
     assert {c.id for c in one}.isdisjoint({c.id for c in two})
 
 

@@ -4,12 +4,12 @@ import pytest
 
 from pipeline.adapters.fakes import (
     FakeHttpClient,
-    FakeLLMProvider,
     HashingEmbedder,
     InMemoryBlobStore,
     in_memory_eraser,
     in_memory_repositories,
 )
+from pipeline.adapters.rule_claims import RuleBasedClaimProvider
 from pipeline.core.collection import factory
 from pipeline.core.inputs import CandidateInput, JobRequirementInput, RunConfig
 from pipeline.core.pipeline import PipelineRun
@@ -29,7 +29,7 @@ def system():
     http = FakeHttpClient(fixture_routes())
     config = RunConfig(min_interval_seconds=0.0)
     pipeline = PipelineRun(
-        repos, blobs, http, FakeLLMProvider(), in_memory_eraser(repos, blobs), HashingEmbedder(), config
+        repos, blobs, http, RuleBasedClaimProvider(), in_memory_eraser(repos, blobs), HashingEmbedder(), config
     )
     return pipeline, repos, blobs, http
 
