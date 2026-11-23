@@ -124,6 +124,8 @@ and secret scanning.
 - `main` is protected. Work on `feature/<milestone>-<module>` branches, open a pull request, get one review from a
   member who is not the author, and merge with a merge commit (never squash) so the test-first history stays visible.
 - Commit the failing test first, then the implementation, then any refactor.
+- Install the pre-commit hook once (`pip install pre-commit && pre-commit install`); it runs `ruff check` and
+  `ruff format --check` before every commit.
 - Every task is a GitHub issue labelled `module:Mx` and `milestone:Mx`; defects are labelled `defect` with a severity.
 
 ## Documentation
