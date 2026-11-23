@@ -40,3 +40,18 @@ def test_openapi_schema_is_published(system):
     schema = TestClient(create_app(system[0])).get("/openapi.json").json()  # QR-16
     paths = {"/runs", "/runs/{run_id}/replay", "/runs/{run_id}/report", "/candidates/{candidate_id}"}
     assert paths <= set(schema["paths"])
+
+
+def test_shutting_down_the_app_closes_the_http_client(system):
+    """INS-11 / V-10: the FastAPI lifespan releases the HTTP connection pool at shutdown."""
+    pipeline, _, _, http = system
+    closed = []
+
+    async def aclose():
+        closed.append(True)
+
+    http.aclose = aclose
+    with TestClient(create_app(pipeline)) as client:
+        assert client.get("/health").status_code == 200
+        assert closed == []
+    assert closed == [True]
